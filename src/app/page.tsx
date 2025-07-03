@@ -4,9 +4,9 @@
 import React, { useState, useEffect } from "react"; // Added useEffect for scroll handling
 import Image from "next/image";
 import {
-  FaExternalLinkAlt,
-  FaChevronDown,
-  FaChevronUp,
+  // FaExternalLinkAlt,
+  // FaChevronDown,
+  // FaChevronUp,
   FaBars,
   FaTimes,
 } from "react-icons/fa";
@@ -133,7 +133,7 @@ const Header: React.FC = () => {
         <div className="text-gray-800 text-center md:text-left w-full md:w-1/2 animate-fade-in-up">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 leading-tight">
             Assalamualaikum... Hello!
-            <br className="hidden sm:inline" /> I'm Md. Sikhul Islam Shihab
+            <br className="hidden sm:inline" /> I&apos;m Md. Sikhul Islam Shihab
           </h1>
           <p className="text-base sm:text-lg md:text-xl mb-6 max-w-md mx-auto md:mx-0">
             Passionate Web Developer | Software Engineer | Computer Science
