@@ -772,7 +772,7 @@ const AwardsSection: React.FC = () => {
       date: "Fall 2022-2023",
       description:
         "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.91 in the CSE program, recognizing outstanding academic achievement.",
-      imageUrl: "/images/fall-22-23.jpg",
+      imageUrl: "/images/spring-22-23.jpg",
     },
   ];
 
