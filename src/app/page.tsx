@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
               </a>
             ))}
             <a
-              href="/resume/Md. SIkhul Islam Shihab(CV).pdf"
+              href="/Md. SIkhul Islam Shihab(CV).pdf"
               download
               className="bg-white text-gray-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors border border-black "
             >
