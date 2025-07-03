@@ -221,11 +221,11 @@ const AboutMeSection: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
           <div className="md:w-1/2 text-gray-700 text-center md:text-left">
             <p className="text-base md:text-lg mb-4 leading-relaxed">
-              Hello! I'm Md. Sikhul Islam Shihab, a passionate Computer Science
-              student at AIUB. My journey in tech is driven by a deep interest
-              in Web Development and Software Engineering. I thrive on bringing
-              ideas to life through code and constantly seek to expand my
-              knowledge in various technologies.
+              Hello! I&apos;m Md. Sikhul Islam Shihab, a passionate Computer
+              Science student at AIUB. My journey in tech is driven by a deep
+              interest in Web Development and Software Engineering. I thrive on
+              bringing ideas to life through code and constantly seek to expand
+              my knowledge in various technologies.
             </p>
             <p className="text-base md:text-lg mb-4 leading-relaxed">
               My expertise spans across foundational web technologies like HTML,
@@ -235,10 +235,10 @@ const AboutMeSection: React.FC = () => {
               practices.
             </p>
             <p className="text-base md:text-lg leading-relaxed">
-              Beyond the lines of code, I'm enthusiastic about teaching and
+              Beyond the lines of code, I&apos;m enthusiastic about teaching and
               nurturing future tech professionals. My goal is to craft
               efficient, user-centric, and semi-automated digital solutions that
-              make a tangible difference. I'm always eager to connect with
+              make a tangible difference. I&apos;m always eager to connect with
               fellow enthusiasts and collaborators!
             </p>
           </div>
