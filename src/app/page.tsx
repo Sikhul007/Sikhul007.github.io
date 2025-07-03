@@ -245,7 +245,7 @@ const AboutMeSection: React.FC = () => {
           <div className="md:w-1/2 flex justify-center md:justify-end">
             <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex-shrink-0 flex items-center justify-center bg-gray-50 border-2 border-black rounded-lg">
               <Image
-                src="/images/shihab2.jpg"
+                src="/images/Shihab.jpg"
                 alt="About Me Illustration"
                 layout="fill"
                 objectFit="contain"
