@@ -117,14 +117,14 @@ const Navbar: React.FC = () => {
 
 // --- Header Component (No change) ---
 const Header: React.FC = () => {
-  const headerLinks = [
-    { name: "Home", href: "#" },
-    { name: "About me", href: "#about" },
-    { name: "Awards", href: "#awards" },
-    { name: "Resume", href: "#resume" },
-    { name: "Projects", href: "#projects" },
-    { name: "Contact me", href: "#contact" },
-  ];
+  // const headerLinks = [
+  //   { name: "Home", href: "#" },
+  //   { name: "About me", href: "#about" },
+  //   { name: "Awards", href: "#awards" },
+  //   { name: "Resume", href: "#resume" },
+  //   { name: "Projects", href: "#projects" },
+  //   { name: "Contact me", href: "#contact" },
+  // ];
 
   return (
     <section className="bg-white py-12 md:py-20 lg:py-24 border-b-2 border-black overflow-hidden">
