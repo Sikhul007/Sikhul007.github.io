@@ -160,7 +160,7 @@ const Header: React.FC = () => {
         {/* Image Section */}
         <div className="relative w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto animate-fade-in flex items-center justify-center bg-gray-50 border-2 border-black rounded-lg">
           <Image
-            src="/images/shihab.jpg"
+            src="/images/shihab2.jpg"
             alt="Profile Photo"
             layout="fill"
             objectFit="contain"
@@ -772,7 +772,7 @@ const AwardsSection: React.FC = () => {
       date: "Fall 2022-2023",
       description:
         "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.91 in the CSE program, recognizing outstanding academic achievement.",
-      imageUrl: "/images/spring-22-23.jpg",
+      imageUrl: "/images/Fall-22-23.jpg",
     },
   ];
 
