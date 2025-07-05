@@ -349,9 +349,9 @@ const ProjectsSection: React.FC = () => {
   const projects = [
     {
       title:
-        "Hotel Amin International (Next.js, Tailwind CSS, Next.js and PostgreSQL)",
+        "Hotel Amin International (Nest.js, Tailwind CSS, Next.js and PostgreSQL)",
       description:
-        "Led the redesign of an e-commerce platform focusing on improved user experience, faster load times, and mobile responsiveness. Implemented a new payment gateway and enhanced product catalog features.",
+        "Built a full-stack hotel management system for Hotel Amin International using NestJS, Next.js, PostgreSQL, and Tailwind CSS. Implemented JWT authentication, role-based access control, and RESTful APIs to manage bookings, billing, inventory, reservations, and staff operations. Creating a secure, scalable platform for real-time hotel operations.",
       imageUrl: "/images/pro_1.png",
       projectUrl: "https://github.com/Sikhul007/Hotel-Amin-Adv.-Web",
     },
