@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
               </a>
             ))}
             <a
-              href="/Md. SIkhul Islam Shihab(CV).pdf"
+              href="/resume/Md. Sikhul Islam Shihab_CV.pdf"
               download
               className="bg-white text-gray-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors border border-black "
             >
@@ -115,16 +115,85 @@ const Navbar: React.FC = () => {
   );
 };
 
-// --- Header Component (No change) ---
-const Header: React.FC = () => {
-  // const headerLinks = [
-  //   { name: "Home", href: "#" },
-  //   { name: "About me", href: "#about" },
-  //   { name: "Awards", href: "#awards" },
-  //   { name: "Resume", href: "#resume" },
-  //   { name: "Projects", href: "#projects" },
-  //   { name: "Contact me", href: "#contact" },
-  // ];
+// --- Header Component (receives animation state as props) ---
+interface HeaderProps {
+  displayText: string;
+  phase: string;
+  partIndex: number;
+  setDisplayText: React.Dispatch<React.SetStateAction<string>>;
+  setPhase: React.Dispatch<React.SetStateAction<string>>;
+  setPartIndex: React.Dispatch<React.SetStateAction<number>>;
+  charIndex: number;
+  setCharIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Header: React.FC<HeaderProps> = ({
+  displayText,
+  phase,
+  partIndex,
+  setDisplayText,
+  setPhase,
+  setPartIndex,
+  charIndex,
+  setCharIndex,
+}) => {
+  const roles = [
+    "Software Engineer",
+    "Web Developer",
+    "Business Analyst",
+    "Computer Science",
+  ];
+  const fullTagline = roles.join(" | ");
+
+  React.useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    const speed = 40;
+    const pause = 900;
+    if (phase === "cumulativeLetter") {
+      let current = "";
+      if (partIndex > 0) {
+        current = roles.slice(0, partIndex).join(" | ") + " | ";
+      }
+      const currentPart = roles[partIndex];
+      if (charIndex < currentPart.length) {
+        setDisplayText(current + currentPart.slice(0, charIndex + 1));
+        timeout = setTimeout(() => {
+          setCharIndex((c) => c + 1);
+        }, speed);
+      } else {
+        setDisplayText(current + currentPart);
+        if (partIndex < roles.length - 1) {
+          timeout = setTimeout(() => {
+            setPartIndex((i) => i + 1);
+            setCharIndex(0);
+          }, pause);
+        } else {
+          timeout = setTimeout(() => {
+            setPhase("full");
+          }, pause);
+        }
+      }
+    } else if (phase === "full") {
+      setDisplayText(fullTagline);
+      timeout = setTimeout(() => {
+        setPhase("erasing");
+      }, 1200);
+    } else if (phase === "erasing") {
+      if (displayText.length > 0) {
+        timeout = setTimeout(() => {
+          setDisplayText((t) => t.slice(0, -1));
+        }, speed);
+      } else {
+        timeout = setTimeout(() => {
+          setPartIndex(0);
+          setCharIndex(0);
+          setPhase("cumulativeLetter");
+        }, 400);
+      }
+    }
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line
+  }, [phase, partIndex, charIndex, displayText, roles, fullTagline]);
 
   return (
     <section className="bg-white py-12 md:py-20 lg:py-24 border-b-2 border-black overflow-hidden">
@@ -135,9 +204,13 @@ const Header: React.FC = () => {
             Assalamualaikum... Hello!
             <br className="hidden sm:inline" /> I&apos;m Md. Sikhul Islam Shihab
           </h1>
-          <p className="text-base sm:text-lg md:text-xl mb-6 max-w-md mx-auto md:mx-0">
-            Passionate Web Developer | Software Engineer | Computer Science
-            Student
+          <p className="text-base sm:text-lg md:text-xl mb-6 max-w-md mx-auto md:mx-0 min-h-[2.5rem]">
+            <span
+              className={`inline-block transition-opacity duration-300 opacity-100`}
+            >
+              {displayText}
+              {phase === "full" && <span className="text-black">.</span>}
+            </span>
           </p>
           <div className="flex justify-center md:justify-start">
             <Link
@@ -160,7 +233,7 @@ const Header: React.FC = () => {
         {/* Image Section */}
         <div className="relative w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto animate-fade-in flex items-center justify-center bg-gray-50 border-2 border-black rounded-lg">
           <Image
-            src="/images/shihab2.jpg"
+            src="/images/shihab.jpg"
             alt="Profile Photo"
             layout="fill"
             objectFit="contain"
@@ -219,13 +292,33 @@ const AboutMeSection: React.FC = () => {
           About Me
         </h2>
         <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-          <div className="md:w-1/2 text-gray-700 text-center md:text-left">
+          <div className="md:w-1/2 text-gray-700 text-justify">
             <p className="text-base md:text-lg mb-4 leading-relaxed">
               Hello! I&apos;m Md. Sikhul Islam Shihab, a passionate Computer
-              Science student at AIUB. My journey in tech is driven by a deep
-              interest in Web Development and Software Engineering. I thrive on
-              bringing ideas to life through code and constantly seek to expand
-              my knowledge in various technologies.
+              Science student at
+              <a
+                href="https://www.aiub.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-700 font-semibold hover:underline"
+              >
+                {" "}
+                American International University-Bangladesh (AIUB)
+              </a>{" "}
+              and a Software Engineer Intern at
+              <a
+                href="https://www.symphonysofttech.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-700 font-semibold hover:underline"
+              >
+                {" "}
+                Symphony Softtech Ltd.
+              </a>
+              . My journey in tech is driven by a deep interest in Web
+              Development, Software Engineering, and scalable backend solutions.
+              I thrive on bringing ideas to life through code and constantly
+              seek to expand my knowledge in various technologies.
             </p>
             <p className="text-base md:text-lg mb-4 leading-relaxed">
               My expertise spans across foundational web technologies like HTML,
@@ -233,6 +326,11 @@ const AboutMeSection: React.FC = () => {
               experience with PHP for backend development, and hands-on exposure
               to ASP.NET MVC and Postman API for robust development and testing
               practices.
+              <br />
+              During my internship at Symphony Softtech Ltd., I worked with
+              experienced engineers to deliver robust backend solutions for
+              enterprise clients, focusing on RESTful APIs, secure
+              authentication, and database optimization.
             </p>
             <p className="text-base md:text-lg leading-relaxed">
               Beyond the lines of code, I&apos;m enthusiastic about teaching and
@@ -245,7 +343,7 @@ const AboutMeSection: React.FC = () => {
           <div className="md:w-1/2 flex justify-center md:justify-end">
             <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex-shrink-0 flex items-center justify-center bg-gray-50 border-2 border-black rounded-lg">
               <Image
-                src="/images/Shihab.jpg"
+                src="/images/shihab2.jpg"
                 alt="About Me Illustration"
                 layout="fill"
                 objectFit="contain"
@@ -303,55 +401,82 @@ const AboutMeSection: React.FC = () => {
   );
 };
 
-// --- Project Card Component (No change) ---
-interface ProjectCardProps {
-  title: string;
-  description: string;
-  imageUrl: string;
-  projectUrl: string;
-}
-
-const ProjectCard: React.FC<ProjectCardProps> = ({
-  title,
-  description,
-  imageUrl,
-  projectUrl,
-}) => {
+const ExperienceSection: React.FC = () => {
+  // You can update this link as needed
+  const companyUrl = "https://www.symphonysofttech.com/";
   return (
-    <div className="bg-white rounded-md shadow-lg border-2 border-black overflow-hidden flex flex-col">
-      <div className="relative w-full h-52 sm:h-60 border-b-2 border-black flex items-center justify-center group">
-        <Image
-          src={imageUrl}
-          alt={title}
-          layout="fill"
-          objectFit="contain"
-          className="rounded-t-md p-2 transition-transform duration-300 group-hover:scale-110"
-        />
+    <section
+      id="experience"
+      className="bg-white py-12 md:py-16 border-b-2 border-black"
+    >
+      <div className="container mx-auto px-4 sm:px-6">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-10 text-center">
+          Experience
+        </h2>
+        <div className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto">
+          <div className="bg-gray-100 rounded-lg border-2 border-black overflow-hidden shadow-md hover:shadow-lg transition-shadow w-full max-w-3xl mx-auto flex flex-col">
+            <div className="p-8 flex flex-col h-full">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
+                <h3 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0">
+                  Software Engineer Intern
+                </h3>
+                <span className="bg-gray-800 text-white text-xs px-3 py-1 rounded-full">
+                  July 2025 – Present
+                </span>
+              </div>
+              <div className="text-gray-700 text-sm mb-2 font-semibold flex items-center text-justify">
+                {companyUrl && (
+                  <a
+                    href={companyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1 rounded bg-gray-800 text-white text-xs font-semibold border border-black hover:bg-gray-700 transition-colors"
+                  >
+                    Symphony Softtech Ltd.
+                  </a>
+                )}
+              </div>
+              <div className="text-gray-700 text-sm mb-4 text-justify">
+                During my internship at Symphony Softtech Ltd., I worked closely
+                with a team of experienced engineers to deliver robust backend
+                solutions for enterprise clients. My responsibilities included
+                designing and developing RESTful APIs using .NET Core,
+                implementing secure role-based authentication, and optimizing
+                SQL Server queries for high performance. I also participated in
+                code reviews, contributed to architectural decisions, and
+                collaborated across teams to ensure seamless integration of
+                backend services with frontend applications. This experience
+                enhanced my skills in scalable backend development, database
+                management, and teamwork in a professional software environment.
+              </div>
+              <ul className="list-disc list-inside text-gray-700 text-sm space-y-1 pl-2 mb-2 text-justify">
+                <li>
+                  Developed REST APIs and backend services using .NET Core.
+                </li>
+                <li>
+                  Collaborated with senior engineers to manage SQL Server
+                  databases.
+                </li>
+                <li>
+                  Implemented role-based authentication and optimized query
+                  performance.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="p-4 sm:p-6 flex-grow flex flex-col">
-        <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
-          {title}
-        </h3>
-        <p className="text-sm text-gray-600 mb-4 flex-grow">{description}</p>
-        <a
-          href={projectUrl}
-          className="inline-block bg-gray-800 text-white px-5 py-2 rounded-md shadow-sm hover:bg-gray-700 transition-colors text-center border-2 border-black text-sm"
-        >
-          View project
-        </a>
-      </div>
-    </div>
+    </section>
   );
 };
 
-// --- Projects Section Component (No change) ---
 const ProjectsSection: React.FC = () => {
   const projects = [
     {
       title:
-        "Hotel Amin International (Nest.js, Tailwind CSS, Next.js and PostgreSQL)",
+        "Hotel Amin International (Next.js, Tailwind CSS, Next.js and PostgreSQL)",
       description:
-        "Built a full-stack hotel management system for Hotel Amin International using NestJS, Next.js, PostgreSQL, and Tailwind CSS. Implemented JWT authentication, role-based access control, and RESTful APIs to manage bookings, billing, inventory, reservations, and staff operations. Creating a secure, scalable platform for real-time hotel operations.",
+        "Led the redesign of an e-commerce platform focusing on improved user experience, faster load times, and mobile responsiveness. Implemented a new payment gateway and enhanced product catalog features.",
       imageUrl: "/images/pro_1.png",
       projectUrl: "https://github.com/Sikhul007/Hotel-Amin-Adv.-Web",
     },
@@ -360,18 +485,17 @@ const ProjectsSection: React.FC = () => {
       description:
         "The front-end focuses on designing and validation to ensure a seamless user experience, while the backend handles all feature logic and operations. Additionally, efficient database management ensures secure storage and retrieval of data.",
       imageUrl: "/images/pro_2.png",
-      projectUrl: "",
+      projectUrl: "https://github.com/Sikhul007/Land-digitalization-sre",
     },
     {
       title: "Amazon (Front-end)",
       description:
         "Replicated the Amazon homepage using HTML and CSS, creating a responsive layout that closely mirrors the original design for an optimal user experience across different devices.",
       imageUrl: "/images/pro_5.png",
-      projectUrl: "#",
+      projectUrl: "https://github.com/Sikhul007/Land-digitalization-sre",
     },
-
     {
-      title: "Dot Net (Backend using 3 tier architecture)",
+      title: ".Net Framework (Backend using 3 tier architecture)",
       description:
         "Created an automated testing suite for a web application using Selenium and Python. Improved testing efficiency by 40% and reduced manual testing time.",
       imageUrl: "/images/pro_4.png",
@@ -392,25 +516,72 @@ const ProjectsSection: React.FC = () => {
       imageUrl: "/images/diagram.png",
       projectUrl: "https://github.com/Sikhul007/Land-digitalization-sre",
     },
-    // Add more projects as needed
   ];
 
   return (
     <section
       id="projects"
-      className="bg-gray-300 py-12 md:py-16 border-b-2 border-black"
+      className="bg-white py-12 md:py-16 border-b-2 border-black"
     >
       <div className="container mx-auto px-4 sm:px-6">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-10 text-center">
           Projects
         </h2>
-        <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
+
+        <div className="flex flex-wrap justify-center lg:justify-between gap-4 lg:gap-6 max-w-6xl mx-auto">
           {projects.map((project, index) => (
             <div
               key={index}
-              className="w-full md:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] max-w-md mx-auto"
+              className="bg-gray-100 rounded-lg border-2 border-black overflow-hidden shadow-md hover:shadow-lg transition-shadow w-full md:w-[calc(50%-1rem)] lg:w-[calc(33%-1rem)] mx-auto lg:mx-0 flex flex-col h-[500px]"
             >
-              <ProjectCard {...project} />
+              <div className="relative w-full h-52 flex items-center justify-center group flex-shrink-0">
+                <Image
+                  src={project.imageUrl}
+                  alt={project.title}
+                  layout="fill"
+                  objectFit="contain"
+                  className="border-b-2 border-black p-2 transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
+              <div className="flex flex-col flex-1 p-6 min-h-0">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="text-xl font-bold text-gray-800">
+                    {project.title}
+                  </h3>
+                </div>
+                <div
+                  className="text-gray-700 overflow-y-auto mb-2"
+                  style={{ maxHeight: "90px" }}
+                >
+                  {project.description}
+                </div>
+                {project.projectUrl && (
+                  <div className="mt-auto text-center">
+                    <button
+                      className={`inline-block px-5 py-2 rounded-md shadow-sm border-2 border-black text-sm font-semibold transition-colors ${
+                        project.projectUrl && project.projectUrl !== "#"
+                          ? "bg-gray-800 text-white hover:bg-gray-700"
+                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                      }`}
+                      type="button"
+                      disabled={
+                        !project.projectUrl || project.projectUrl === "#"
+                      }
+                      onClick={() => {
+                        if (project.projectUrl && project.projectUrl !== "#") {
+                          window.open(
+                            project.projectUrl,
+                            "_blank",
+                            "noopener,noreferrer"
+                          );
+                        }
+                      }}
+                    >
+                      View on GitHub
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -468,7 +639,7 @@ const ContactSection: React.FC = () => {
                     id="name"
                     name="name"
                     required
-                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800"
+                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
                     placeholder="Your Name"
                   />
                 </div>
@@ -484,7 +655,7 @@ const ContactSection: React.FC = () => {
                     id="email"
                     name="email"
                     required
-                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800"
+                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -500,7 +671,7 @@ const ContactSection: React.FC = () => {
                     id="subject"
                     name="subject"
                     required
-                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800"
+                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
                     placeholder="Subject of your message"
                   />
                 </div>
@@ -516,7 +687,7 @@ const ContactSection: React.FC = () => {
                     name="message"
                     rows={5}
                     required
-                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800"
+                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
                     placeholder="Your message here..."
                   ></textarea>
                 </div>
@@ -753,10 +924,26 @@ const AwardsSection: React.FC = () => {
     {
       title: "🏅 Dean's Award",
       issuer: "American International University-Bangladesh",
+      date: "Fall 2022-2023",
+      description:
+        "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.91 in the CSE program, recognizing outstanding academic achievement.",
+      imageUrl: "/images/fall-22-23.jpg",
+    },
+    {
+      title: "🏅 Dean's Award",
+      issuer: "American International University-Bangladesh",
       date: "Spring 2022-2023",
       description:
         "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 4.00 in the CSE program, recognizing outstanding academic achievement.",
       imageUrl: "/images/spring-22-23.jpg",
+    },
+    {
+      title: "🏅 Dean's Award",
+      issuer: "American International University-Bangladesh",
+      date: "Fall 2023-2024",
+      description:
+        "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.85 in the CSE program, recognizing outstanding academic achievement.",
+      imageUrl: "/images/fall-23-24.jpg",
     },
     {
       title: "Poster Presentation Certificate",
@@ -769,10 +956,18 @@ const AwardsSection: React.FC = () => {
     {
       title: "🏅 Dean's Award",
       issuer: "American International University-Bangladesh",
-      date: "Fall 2022-2023",
+      date: "Spring 2023-2024",
       description:
-        "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.91 in the CSE program, recognizing outstanding academic achievement.",
-      imageUrl: "/images/Fall-22-23.jpg",
+        "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.80 in the CSE program, recognizing outstanding academic achievement.",
+      imageUrl: "/images/spring-23-24.jpg",
+    },
+    {
+      title: "🏅 Dean's Award",
+      issuer: "American International University-Bangladesh",
+      date: "Fall 2024-2025",
+      description:
+        "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.85 in the CSE program, recognizing outstanding academic achievement.",
+      imageUrl: "/images/fall-24-25.jpg",
     },
   ];
 
@@ -823,23 +1018,52 @@ const AwardsSection: React.FC = () => {
   );
 };
 
-// --- Main Portfolio Page (Updated) ---
+// --- Main Portfolio Page (Updated for dynamic background) ---
 const PortfolioPage: React.FC = () => {
   const [currentYear, setCurrentYear] = useState("");
+
+  // Animation state for Header
+  const [displayText, setDisplayText] = useState("");
+  const [phase, setPhase] = useState("cumulativeLetter");
+  const [partIndex, setPartIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear().toString());
   }, []);
 
+  // Determine background class based on partIndex (odd/even)
+  // Only alternate during typing/erasing, not during full display
+  let bgClass = "bg-gray-50";
+  if (phase === "cumulativeLetter" || phase === "erasing") {
+    bgClass =
+      partIndex % 2 === 0
+        ? "bg-gradient-to-br from-blue-200 via-blue-100 to-blue-50"
+        : "bg-gradient-to-br from-yellow-100 via-pink-100 to-pink-50";
+  } else if (phase === "full") {
+    bgClass = "bg-gradient-to-br from-green-100 via-green-50 to-white";
+  }
+
   return (
-    <div className="bg-gray-50 min-h-screen font-sans">
+    <div
+      className={`${bgClass} min-h-screen font-sans transition-colors duration-700`}
+    >
       <Navbar />
       <div className="pt-16">
-        {" "}
-        <Header />
+        <Header
+          displayText={displayText}
+          phase={phase}
+          partIndex={partIndex}
+          setDisplayText={setDisplayText}
+          setPhase={setPhase}
+          setPartIndex={setPartIndex}
+          charIndex={charIndex}
+          setCharIndex={setCharIndex}
+        />
         <AboutMeSection />
-        <AwardsSection />
+        <ExperienceSection />
         <ProjectsSection />
+        <AwardsSection />
         <ContactSection />
         <footer className="bg-gray-800 text-white text-center py-6 border-t-2 border-black">
           <p className="text-sm sm:text-base">
