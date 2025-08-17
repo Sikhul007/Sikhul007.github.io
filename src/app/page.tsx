@@ -25,6 +25,28 @@ const Navbar: React.FC = () => {
     { name: "Contact", href: "#contact" },
   ];
 
+  // Smooth scroll handler
+  const handleSmoothScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    if (href === "#" || href === "#home") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setIsOpen(false);
+      return;
+    }
+    if (href.startsWith("#") && href.length > 1) {
+      e.preventDefault();
+      const id = href.replace("#", "");
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+        setIsOpen(false); // close mobile menu if open
+      }
+    }
+  };
+
   // Handle scroll effect for navbar
   useEffect(() => {
     const handleScroll = () => {
@@ -50,7 +72,14 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center">
             <span className="text-xxl sm:text-2xl font-bold text-white">
-              <a href="#">SHIHAB</a>
+              <a
+                href="#"
+                onClick={(e) => handleSmoothScroll(e, "#")}
+                className="cursor-pointer hover:underline transition-colors duration-200"
+                aria-label="Scroll to top"
+              >
+                SHIHAB
+              </a>
             </span>
           </div>
 
@@ -61,6 +90,7 @@ const Navbar: React.FC = () => {
                 key={index}
                 href={link.href}
                 className="text-white hover:text-gray-300 font-medium text-sm transition-colors underline-offset-4 hover:underline"
+                onClick={(e) => handleSmoothScroll(e, link.href)}
               >
                 {link.name}
               </a>
@@ -104,7 +134,7 @@ const Navbar: React.FC = () => {
                   key={index}
                   href={link.href}
                   className="text-white hover:text-gray-300 font-medium text-base transition-colors"
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => handleSmoothScroll(e, link.href)}
                 >
                   {link.name}
                 </a>
@@ -209,12 +239,12 @@ const Header: React.FC<HeaderProps> = ({
     <section className="bg-white py-12 md:py-20 lg:py-24 border-b-2 border-black overflow-hidden">
       <div className="container mx-auto flex flex-col-reverse md:flex-row items-center justify-between px-4 sm:px-6 gap-10">
         {/* Text Content */}
-        <div className="text-gray-800 text-center md:text-left w-full md:w-1/2 animate-fade-in-up">
+        <div className="text-gray-800 w-full md:w-1/2 flex flex-col items-center justify-center text-center animate-fade-in-up">
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 leading-tight">
             Assalamualaikum... Hello!
             <br className="hidden sm:inline" /> I&apos;m Md. Sikhul Islam Shihab
           </h1>
-          <p className="text-base sm:text-lg md:text-xl mb-6 max-w-md mx-auto md:mx-0 min-h-[2.5rem]">
+          <p className="text-base sm:text-lg md:text-xl mb-6 max-w-md min-h-[2.5rem] mx-auto">
             <span
               className={`inline-block transition-opacity duration-300 opacity-100`}
             >
@@ -222,7 +252,7 @@ const Header: React.FC<HeaderProps> = ({
               {phase === "full" && <span className="text-black">.</span>}
             </span>
           </p>
-          <div className="flex justify-center md:justify-start">
+          <div className="flex justify-center gap-4 w-full">
             <Link
               href="https://github.com/Sikhul007?tab=repositories"
               className="bg-gray-800 text-white px-6 sm:px-8 py-3 rounded-md shadow-md hover:bg-gray-700 transition-colors border-2 border-black text-sm sm:text-base font-semibold"
@@ -232,7 +262,7 @@ const Header: React.FC<HeaderProps> = ({
             </Link>
             <Link
               href="https://www.linkedin.com/in/md-sikhul-islam-shihab/"
-              className="bg-gray-800 text-white px-6 sm:px-8 py-3 rounded-md shadow-md hover:bg-gray-700 transition-colors border-2 border-black text-sm sm:text-base font-semibold ml-4"
+              className="bg-gray-800 text-white px-6 sm:px-8 py-3 rounded-md shadow-md hover:bg-gray-700 transition-colors border-2 border-black text-sm sm:text-base font-semibold"
               target="_blank"
             >
               LinkedIn
@@ -301,56 +331,60 @@ const AboutMeSection: React.FC = () => {
         <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">
           About Me
         </h2>
-        <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
-          <div className="md:w-1/2 text-gray-700 text-justify">
-            <p className="text-base md:text-lg mb-4 leading-relaxed">
-              Hello! I&apos;m Md. Sikhul Islam Shihab, a passionate Computer
-              Science student at
-              <a
-                href="https://www.aiub.edu/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-indigo-700 font-semibold hover:underline"
-              >
-                {" "}
-                American International University-Bangladesh (AIUB)
-              </a>{" "}
-              and a Software Engineer Intern at
-              <a
-                href="https://www.symphonysofttech.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-indigo-700 font-semibold hover:underline"
-              >
-                {" "}
-                Symphony Softtech Ltd.
-              </a>
-              . My journey in tech is driven by a deep interest in Web
-              Development, Software Engineering, and scalable backend solutions.
-              I thrive on bringing ideas to life through code and constantly
-              seek to expand my knowledge in various technologies.
-            </p>
-            <p className="text-base md:text-lg mb-4 leading-relaxed">
-              My expertise spans across foundational web technologies like HTML,
-              CSS, and JavaScript, extending to modern frameworks. I also have
-              experience with PHP for backend development, and hands-on exposure
-              to ASP.NET MVC and Postman API for robust development and testing
-              practices.
-              <br />
-              During my internship at Symphony Softtech Ltd., I worked with
-              experienced engineers to deliver robust backend solutions for
-              enterprise clients, focusing on RESTful APIs, secure
-              authentication, and database optimization.
-            </p>
-            <p className="text-base md:text-lg leading-relaxed">
-              Beyond the lines of code, I&apos;m enthusiastic about teaching and
-              nurturing future tech professionals. My goal is to craft
-              efficient, user-centric, and semi-automated digital solutions that
-              make a tangible difference. I&apos;m always eager to connect with
-              fellow enthusiasts and collaborators!
-            </p>
+        <div className="flex flex-col md:flex-row items-center md:items-stretch gap-8">
+          {/* Description - left part */}
+          <div className="md:w-1/2 flex flex-col justify-center items-center text-gray-700 text-center min-h-[340px]">
+            <div className="w-full max-w-lg">
+              <p className="text-base md:text-lg mb-4 leading-relaxed">
+                Hello! I&apos;m Md. Sikhul Islam Shihab, a passionate Computer
+                Science student at
+                <a
+                  href="https://www.aiub.edu/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-700 font-semibold hover:underline"
+                >
+                  {" "}
+                  American International University-Bangladesh (AIUB)
+                </a>{" "}
+                and a Software Engineer Intern at
+                <a
+                  href="https://www.symphonysofttech.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-700 font-semibold hover:underline"
+                >
+                  {" "}
+                  Symphony Softtech Ltd.
+                </a>
+                . My journey in tech is driven by a deep interest in Web
+                Development, Software Engineering, and scalable backend
+                solutions. I thrive on bringing ideas to life through code and
+                constantly seek to expand my knowledge in various technologies.
+              </p>
+              <p className="text-base md:text-lg mb-4 leading-relaxed">
+                My expertise spans across foundational web technologies like
+                HTML, CSS, and JavaScript, extending to modern frameworks. I
+                also have experience with PHP for backend development, and
+                hands-on exposure to ASP.NET MVC and Postman API for robust
+                development and testing practices.
+                <br />
+                During my internship at Symphony Softtech Ltd., I worked with
+                experienced engineers to deliver robust backend solutions for
+                enterprise clients, focusing on RESTful APIs, secure
+                authentication, and database optimization.
+              </p>
+              <p className="text-base md:text-lg leading-relaxed">
+                Beyond the lines of code, I&apos;m enthusiastic about teaching
+                and nurturing future tech professionals. My goal is to craft
+                efficient, user-centric, and semi-automated digital solutions
+                that make a tangible difference. I&apos;m always eager to
+                connect with fellow enthusiasts and collaborators!
+              </p>
+            </div>
           </div>
-          <div className="md:w-1/2 flex justify-center md:justify-end">
+          {/* Image - right part */}
+          <div className="md:w-1/2 flex items-center justify-center">
             <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex-shrink-0 flex items-center justify-center bg-gray-50 border-2 border-black rounded-lg">
               <Image
                 src="/images/shihab2.jpg"
@@ -610,6 +644,41 @@ const ProjectsSection: React.FC = () => {
 
 // --- Contact Section Component ---
 const ContactSection: React.FC = () => {
+  // Contact form state
+  const [form, setForm] = React.useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [sent, setSent] = React.useState(false);
+
+  // Handle input change
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // Handle form submit
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Send to formsubmit.co
+    await fetch("https://formsubmit.co/ajax/sikhulshihab@gmail.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...form,
+        _subject: "New Portfolio Contact Message",
+        _captcha: "false",
+      }),
+    });
+    setSent(true);
+    setForm({ name: "", email: "", subject: "", message: "" });
+    // Optionally scroll to top or show a message
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <section
       id="contact"
@@ -628,96 +697,94 @@ const ContactSection: React.FC = () => {
               <h3 className="text-xl font-bold mb-6 text-gray-800">
                 Send Me a Message
               </h3>
-              <form
-                action="https://formsubmit.co/sikhulshihab@gmail.com"
-                method="POST"
-              >
-                <input
-                  type="hidden"
-                  name="_subject"
-                  value="New Portfolio Contact Message"
-                />
-                <input
-                  type="hidden"
-                  name="_next"
-                  value={
-                    typeof window !== "undefined" ? window.location.href : ""
-                  }
-                />
-                <input type="hidden" name="_captcha" value="false" />
-                <div className="mb-6">
-                  <label
-                    htmlFor="name"
-                    className="block text-gray-700 font-medium mb-2"
-                  >
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
-                    placeholder="Your Name"
-                  />
+              {sent ? (
+                <div className="text-green-700 text-lg font-semibold text-center py-8">
+                  Thank you for your message! I will get back to you soon.
                 </div>
-                <div className="mb-6">
-                  <label
-                    htmlFor="email"
-                    className="block text-gray-700 font-medium mb-2"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-                <div className="mb-6">
-                  <label
-                    htmlFor="subject"
-                    className="block text-gray-700 font-medium mb-2"
-                  >
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    required
-                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
-                    placeholder="Subject of your message"
-                  />
-                </div>
-                <div className="mb-6">
-                  <label
-                    htmlFor="message"
-                    className="block text-gray-700 font-medium mb-2"
-                  >
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={5}
-                    required
-                    className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
-                    placeholder="Your message here..."
-                  ></textarea>
-                </div>
-                <div className="text-center">
-                  <button
-                    type="submit"
-                    className="bg-gray-800 text-white px-8 py-3 rounded-md shadow-md hover:bg-gray-700 transition-colors border-2 border-black text-base font-semibold"
-                  >
-                    Send Message
-                  </button>
-                </div>
-              </form>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-6">
+                    <label
+                      htmlFor="name"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      Name
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      required
+                      value={form.name}
+                      onChange={handleChange}
+                      className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
+                      placeholder="Your Name"
+                    />
+                  </div>
+                  <div className="mb-6">
+                    <label
+                      htmlFor="email"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      value={form.email}
+                      onChange={handleChange}
+                      className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+                  <div className="mb-6">
+                    <label
+                      htmlFor="subject"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      Subject
+                    </label>
+                    <input
+                      type="text"
+                      id="subject"
+                      name="subject"
+                      required
+                      value={form.subject}
+                      onChange={handleChange}
+                      className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
+                      placeholder="Subject of your message"
+                    />
+                  </div>
+                  <div className="mb-6">
+                    <label
+                      htmlFor="message"
+                      className="block text-gray-700 font-medium mb-2"
+                    >
+                      Message
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows={5}
+                      required
+                      value={form.message}
+                      onChange={handleChange}
+                      className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
+                      placeholder="Your message here..."
+                    ></textarea>
+                  </div>
+                  <div className="text-center">
+                    <button
+                      type="submit"
+                      className="bg-gray-800 text-white px-8 py-3 rounded-md shadow-md hover:bg-gray-700 transition-colors border-2 border-black text-base font-semibold"
+                    >
+                      Send Message
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
 
