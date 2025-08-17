@@ -74,11 +74,21 @@ const Navbar: React.FC = () => {
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          {/* Mobile Download Resume Button + Menu Button */}
+          <div className="md:hidden flex items-center gap-2">
+            <a
+              href="/resume/Md. Sikhul Islam Shihab_CV.pdf"
+              download
+              className="bg-white text-gray-800 px-3 py-2 rounded-md text-sm font-semibold border-2 border-black shadow hover:bg-gray-200 transition-colors"
+              style={{ minWidth: 44, textAlign: "center" }}
+            >
+              <span className="hidden xs:inline">Download</span>
+              <span className="inline xs:hidden">Download CV</span>
+            </a>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 focus:outline-none"
+              className="text-gray-700 focus:outline-none ml-1"
+              aria-label="Open menu"
             >
               {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
             </button>
@@ -100,7 +110,7 @@ const Navbar: React.FC = () => {
                 </a>
               ))}
               <a
-                href="/resume/Md. SIkhul Islam Shihab(CV).pdf"
+                href="/resume/Md. Sikhul Islam Shihab_CV.pdf"
                 download
                 className="bg-white text-gray-800 px-4 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition-colors border border-black w-fit"
                 onClick={() => setIsOpen(false)}
@@ -436,7 +446,7 @@ const ExperienceSection: React.FC = () => {
                   </a>
                 )}
               </div>
-              <div className="text-gray-700 text-sm mb-4 text-justify">
+              {/* <div className="text-gray-700 text-sm mb-4 text-justify">
                 During my internship at Symphony Softtech Ltd., I worked closely
                 with a team of experienced engineers to deliver robust backend
                 solutions for enterprise clients. My responsibilities included
@@ -448,18 +458,26 @@ const ExperienceSection: React.FC = () => {
                 backend services with frontend applications. This experience
                 enhanced my skills in scalable backend development, database
                 management, and teamwork in a professional software environment.
-              </div>
+              </div> */}
               <ul className="list-disc list-inside text-gray-700 text-sm space-y-1 pl-2 mb-2 text-justify">
                 <li>
-                  Developed REST APIs and backend services using .NET Core.
+                  Built and maintained RESTful APIs and backend services using
+                  .NET Core.
                 </li>
                 <li>
-                  Collaborated with senior engineers to manage SQL Server
-                  databases.
+                  Optimized SQL Server databases, improving query performance
+                  and reliability.
                 </li>
                 <li>
-                  Implemented role-based authentication and optimized query
-                  performance.
+                  Implemented role-based authentication and security features.
+                </li>
+                <li>
+                  Contributed to system design, debugging, and testing to ensure
+                  scalable solutions.
+                </li>
+                <li>
+                  Collaborated with senior engineers in developing efficient
+                  backend architecture.
                 </li>
               </ul>
             </div>
