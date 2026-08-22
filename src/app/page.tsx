@@ -915,7 +915,7 @@ const ContactSection: React.FC = () => {
                 </div>
               </div>
               <div className="border-t border-line pt-6">
-  <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="grid grid-cols-2 gap-3 text-sm">
                   {[
                     { name: "GitHub", href: "https://github.com/Sikhul007" },
                     { name: "LinkedIn", href: "https://www.linkedin.com/in/md-sikhul-islam-shihab/" },
