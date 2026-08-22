@@ -1,35 +1,132 @@
 // app/page.tsx
 "use client";
-
-import React, { useState, useEffect } from "react"; // Added useEffect for scroll handling
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import {
-  // FaExternalLinkAlt,
-  // FaChevronDown,
-  // FaChevronUp,
-  FaBars,
-  FaTimes,
-} from "react-icons/fa";
 import Link from "next/link";
+import { FaBars, FaTimes, FaGithub, FaLinkedin } from "react-icons/fa";
 
-// --- Navbar Component ---
+/* =========================================================================
+   THEME — "Live API" portfolio for a .NET backend engineer
+   Palette (syntax-highlighting logic):
+     void    #070B14  page base          panel  #0D1420  cards
+     line    #1E2A3D  borders            raised #141E2E  elevated
+     purple  #7C5CFF  keywords / actions (.NET brand family)
+     amber   #F5B759  strings / highlights
+     green   #3DDC97  status 200 / success
+     text    #E6EBF4  primary            muted  #8B98AD
+   Type: Space Grotesk (display) · Inter (body) · JetBrains Mono (code)
+   ========================================================================= */
+
+const GlobalStyles = () => (
+  <style>{`
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --void:   #070B14;
+      --panel:  #0D1420;
+      --raised: #141E2E;
+      --line:   #1E2A3D;
+      --purple: #7C5CFF;
+      --purple-deep: #512BD4;
+      --amber:  #F5B759;
+      --green:  #3DDC97;
+      --text:   #E6EBF4;
+      --muted:  #8B98AD;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body, .font-body { font-family: 'Inter', system-ui, sans-serif; }
+    .font-display    { font-family: 'Space Grotesk', system-ui, sans-serif; }
+    .font-mono       { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+    .bg-void   { background-color: var(--void); }
+    .bg-panel  { background-color: var(--panel); }
+    .bg-raised { background-color: var(--raised); }
+    .border-line { border-color: var(--line); }
+
+    .text-main   { color: var(--text); }
+    .text-muted  { color: var(--muted); }
+    .text-purple { color: var(--purple); }
+    .text-amber  { color: var(--amber); }
+    .text-green  { color: var(--green); }
+
+    /* subtle grid backdrop — engineering paper */
+    .grid-bg {
+      background-image:
+        linear-gradient(rgba(124, 92, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 92, 255, 0.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    .glow-purple { box-shadow: 0 0 0 1px rgba(124,92,255,.35), 0 0 42px rgba(124,92,255,.16); }
+    .card-hover  { transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      border-color: rgba(124,92,255,.55);
+      box-shadow: 0 12px 40px rgba(0,0,0,.45), 0 0 24px rgba(124,92,255,.10);
+    }
+
+    @keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+    .cursor-block {
+      display: inline-block; width: .6em; height: 1.1em;
+      background: var(--amber); vertical-align: text-bottom;
+      margin-left: 2px; animation: blink 1s step-end infinite;
+    }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+    .fade-up   { animation: fadeUp .7s ease both; }
+    .fade-up-1 { animation: fadeUp .7s ease .12s both; }
+    .fade-up-2 { animation: fadeUp .7s ease .24s both; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up, .fade-up-1, .fade-up-2 { animation: none; }
+      .cursor-block { animation: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    ::selection { background: rgba(124,92,255,.4); }
+
+    /* thin scrollbars for code panes */
+    .scroll-thin::-webkit-scrollbar { height: 6px; width: 6px; }
+    .scroll-thin::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+  `}</style>
+);
+
+/* ---------- Section header rendered as an API endpoint ---------- */
+const EndpointHeader: React.FC<{ method?: string; path: string; title: string; sub?: string }> = ({
+  method = "GET",
+  path,
+  title,
+  sub,
+}) => (
+  <div className="mb-12 text-center">
+    <div className="inline-flex items-center gap-2 font-mono text-xs sm:text-sm bg-raised border border-line rounded-full px-4 py-1.5 mb-4">
+      <span className="text-green font-semibold">{method}</span>
+      <span className="text-muted">{path}</span>
+      <span className="text-muted">·</span>
+      <span className="text-green">200 OK</span>
+    </div>
+    <h2 className="font-display text-3xl sm:text-4xl font-bold text-main">{title}</h2>
+    {sub && <p className="text-muted mt-3 max-w-xl mx-auto text-sm sm:text-base">{sub}</p>}
+  </div>
+);
+
+/* ============================== NAVBAR ============================== */
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   const navLinks = [
-    { name: "Home", href: "#" },
-    { name: "About", href: "#about" },
-    { name: "Awards", href: "#awards" },
-    { name: "Projects", href: "#projects" },
-    { name: "Contact", href: "#contact" },
+    { name: "home", href: "#" },
+    { name: "about", href: "#about" },
+    { name: "experience", href: "#experience" },
+    { name: "projects", href: "#projects" },
+    { name: "awards", href: "#awards" },
+    { name: "contact", href: "#contact" },
   ];
 
-  // Smooth scroll handler
-  const handleSmoothScroll = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
-  ) => {
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     if (href === "#" || href === "#home") {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -38,115 +135,96 @@ const Navbar: React.FC = () => {
     }
     if (href.startsWith("#") && href.length > 1) {
       e.preventDefault();
-      const id = href.replace("#", "");
-      const el = document.getElementById(id);
+      const el = document.getElementById(href.slice(1));
       if (el) {
         el.scrollIntoView({ behavior: "smooth" });
-        setIsOpen(false); // close mobile menu if open
+        setIsOpen(false);
       }
     }
   };
 
-  // Handle scroll effect for navbar
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? "bg-gray-800 shadow-md py-2" : "bg-gray-800 py-4"
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b border-line ${
+        isScrolled ? "py-2 backdrop-blur-md bg-[#070B14]/90 shadow-lg" : "py-4 bg-[#070B14]/70 backdrop-blur"
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6">
         <nav className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <span className="text-xxl sm:text-2xl font-bold text-white">
-              <a
-                href="#"
-                onClick={(e) => handleSmoothScroll(e, "#")}
-                className="cursor-pointer hover:underline transition-colors duration-200"
-                aria-label="Scroll to top"
-              >
-                SHIHAB
-              </a>
-            </span>
-          </div>
+          {/* Logo — terminal prompt */}
+          <a
+            href="#"
+            onClick={(e) => handleSmoothScroll(e, "#")}
+            aria-label="Scroll to top"
+            className="font-mono text-lg sm:text-xl font-semibold text-main hover:text-purple transition-colors"
+          >
+            <span className="text-purple">~/</span>shihab
+            <span className="text-amber">_</span>
+          </a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navLinks.map((link, index) => (
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-7">
+            {navLinks.map((link) => (
               <a
-                key={index}
+                key={link.name}
                 href={link.href}
-                className="text-white hover:text-gray-300 font-medium text-sm transition-colors underline-offset-4 hover:underline"
                 onClick={(e) => handleSmoothScroll(e, link.href)}
+                className="font-mono text-sm text-muted hover:text-main transition-colors"
               >
+                <span className="text-purple">.</span>
                 {link.name}
+                <span className="text-muted">()</span>
               </a>
             ))}
             <a
               href="/resume/Md. Sikhul Islam Shihab_CV.pdf"
               download
-              className="bg-white text-gray-800 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors border border-black "
+              className="font-mono text-sm font-semibold px-4 py-2 rounded-md bg-[#7C5CFF] text-white hover:bg-[#8f74ff] transition-colors shadow-[0_0_18px_rgba(124,92,255,.35)]"
             >
-              Download Resume
+              resume.pdf ↓
             </a>
           </div>
 
-          {/* Mobile Download Resume Button + Menu Button */}
+          {/* Mobile controls */}
           <div className="md:hidden flex items-center gap-2">
             <a
               href="/resume/Md. Sikhul Islam Shihab_CV.pdf"
               download
-              className="bg-white text-gray-800 px-3 py-2 rounded-md text-sm font-semibold border-2 border-black shadow hover:bg-gray-200 transition-colors"
-              style={{ minWidth: 44, textAlign: "center" }}
+              className="font-mono text-xs font-semibold px-3 py-2 rounded-md bg-[#7C5CFF] text-white"
             >
-              <span className="hidden xs:inline">Download</span>
-              <span className="inline xs:hidden">Download CV</span>
+              resume ↓
             </a>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 focus:outline-none ml-1"
-              aria-label="Open menu"
+              className="text-main focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFF] rounded p-1"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
             >
-              {isOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+              {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
             </button>
           </div>
         </nav>
 
-        {/* Mobile Navigation */}
+        {/* Mobile nav */}
         {isOpen && (
-          <div className="md:hidden mt-4 py-4 border-t border-gray-200">
+          <div className="md:hidden mt-4 py-4 border-t border-line">
             <div className="flex flex-col space-y-4">
-              {navLinks.map((link, index) => (
+              {navLinks.map((link) => (
                 <a
-                  key={index}
+                  key={link.name}
                   href={link.href}
-                  className="text-white hover:text-gray-300 font-medium text-base transition-colors"
                   onClick={(e) => handleSmoothScroll(e, link.href)}
+                  className="font-mono text-base text-muted hover:text-main transition-colors"
                 >
-                  {link.name}
+                  <span className="text-purple">.</span>
+                  {link.name}()
                 </a>
               ))}
-              <a
-                href="/resume/Md. Sikhul Islam Shihab_CV.pdf"
-                download
-                className="bg-white text-gray-800 px-4 py-2 rounded-md text-base font-medium hover:bg-gray-700 transition-colors border border-black w-fit"
-                onClick={() => setIsOpen(false)}
-              >
-                Download Resume
-              </a>
             </div>
           </div>
         )}
@@ -155,288 +233,297 @@ const Navbar: React.FC = () => {
   );
 };
 
-// --- Header Component (receives animation state as props) ---
-interface HeaderProps {
-  displayText: string;
-  phase: string;
-  partIndex: number;
-  setDisplayText: React.Dispatch<React.SetStateAction<string>>;
-  setPhase: React.Dispatch<React.SetStateAction<string>>;
-  setPartIndex: React.Dispatch<React.SetStateAction<number>>;
-  charIndex: number;
-  setCharIndex: React.Dispatch<React.SetStateAction<number>>;
-}
+/* ============================== HERO ============================== */
+const Hero: React.FC = () => {
+  const roles = ["Backend Engineer", ".NET Developer", "API Architect", "Problem Solver"];
+  const [displayText, setDisplayText] = useState("");
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
 
-const Header: React.FC<HeaderProps> = ({
-  displayText,
-  phase,
-  partIndex,
-  setDisplayText,
-  setPhase,
-  setPartIndex,
-  charIndex,
-  setCharIndex,
-}) => {
-  const roles = [
-    "Software Engineer",
-    "Web Developer",
-    "Business Analyst",
-    "Computer Science",
-  ];
-  const fullTagline = roles.join(" | ");
-
-  React.useEffect(() => {
+  useEffect(() => {
+    const current = roles[roleIndex];
     let timeout: NodeJS.Timeout;
-    const speed = 40;
-    const pause = 900;
-    if (phase === "cumulativeLetter") {
-      let current = "";
-      if (partIndex > 0) {
-        current = roles.slice(0, partIndex).join(" | ") + " | ";
-      }
-      const currentPart = roles[partIndex];
-      if (charIndex < currentPart.length) {
-        setDisplayText(current + currentPart.slice(0, charIndex + 1));
-        timeout = setTimeout(() => {
-          setCharIndex((c) => c + 1);
-        }, speed);
-      } else {
-        setDisplayText(current + currentPart);
-        if (partIndex < roles.length - 1) {
-          timeout = setTimeout(() => {
-            setPartIndex((i) => i + 1);
-            setCharIndex(0);
-          }, pause);
-        } else {
-          timeout = setTimeout(() => {
-            setPhase("full");
-          }, pause);
-        }
-      }
-    } else if (phase === "full") {
-      setDisplayText(fullTagline);
+
+    if (!deleting && charIndex < current.length) {
       timeout = setTimeout(() => {
-        setPhase("erasing");
-      }, 1200);
-    } else if (phase === "erasing") {
-      if (displayText.length > 0) {
-        timeout = setTimeout(() => {
-          setDisplayText((t) => t.slice(0, -1));
-        }, speed);
-      } else {
-        timeout = setTimeout(() => {
-          setPartIndex(0);
-          setCharIndex(0);
-          setPhase("cumulativeLetter");
-        }, 400);
-      }
+        setDisplayText(current.slice(0, charIndex + 1));
+        setCharIndex((c) => c + 1);
+      }, 65);
+    } else if (!deleting && charIndex === current.length) {
+      timeout = setTimeout(() => setDeleting(true), 1600);
+    } else if (deleting && charIndex > 0) {
+      timeout = setTimeout(() => {
+        setDisplayText(current.slice(0, charIndex - 1));
+        setCharIndex((c) => c - 1);
+      }, 35);
+    } else if (deleting && charIndex === 0) {
+      timeout = setTimeout(() => {
+        setDeleting(false);
+        setRoleIndex((i) => (i + 1) % roles.length);
+      }, 350);
     }
     return () => clearTimeout(timeout);
-    // eslint-disable-next-line
-  }, [phase, partIndex, charIndex, displayText, roles, fullTagline]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [charIndex, deleting, roleIndex]);
 
   return (
-    <section className="bg-white py-12 md:py-20 lg:py-24 border-b-2 border-black overflow-hidden">
-      <div className="container mx-auto flex flex-col-reverse md:flex-row items-center justify-between px-4 sm:px-6 gap-10">
-        {/* Text Content */}
-        <div className="text-gray-800 w-full md:w-1/2 flex flex-col items-center justify-center text-center animate-fade-in-up">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-4 leading-tight">
-            Assalamualaikum... Hello!
-            <br className="hidden sm:inline" /> I&apos;m Md. Sikhul Islam Shihab
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl mb-6 max-w-md min-h-[2.5rem] mx-auto">
-            <span
-              className={`inline-block transition-opacity duration-300 opacity-100`}
-            >
-              {displayText}
-              {phase === "full" && <span className="text-black">.</span>}
-            </span>
-          </p>
-          <div className="flex justify-center gap-4 w-full">
-            <Link
-              href="https://github.com/Sikhul007?tab=repositories"
-              className="bg-gray-800 text-white px-6 sm:px-8 py-3 rounded-md shadow-md hover:bg-gray-700 transition-colors border-2 border-black text-sm sm:text-base font-semibold"
-              target="_blank"
-            >
-              My Works
-            </Link>
-            <Link
-              href="https://www.linkedin.com/in/md-sikhul-islam-shihab/"
-              className="bg-gray-800 text-white px-6 sm:px-8 py-3 rounded-md shadow-md hover:bg-gray-700 transition-colors border-2 border-black text-sm sm:text-base font-semibold"
-              target="_blank"
-            >
-              LinkedIn
-            </Link>
+    <section className="grid-bg pt-32 pb-16 md:pt-40 md:pb-24 border-b border-line relative overflow-hidden">
+      {/* ambient glow */}
+      <div
+        aria-hidden
+        className="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[380px] rounded-full pointer-events-none"
+        style={{ background: "radial-gradient(closest-side, rgba(124,92,255,.16), transparent)" }}
+      />
+      <div className="container mx-auto px-4 sm:px-6 relative">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          {/* Left — intro */}
+          <div className="w-full lg:w-1/2 text-center lg:text-left fade-up">
+            <p className="font-mono text-sm text-green mb-4">
+              <span className="text-muted">$</span> whoami{" "}
+              <span className="text-muted">— Assalamualaikum, hello!</span>
+            </p>
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-main leading-tight mb-5">
+              Md. Sikhul Islam{" "}
+              <span className="text-purple">Shihab</span>
+            </h1>
+            <p className="font-mono text-base sm:text-lg mb-8 min-h-[2rem]">
+              <span className="text-purple">const</span>{" "}
+              <span className="text-main">role</span>{" "}
+              <span className="text-muted">=</span>{" "}
+              <span className="text-amber">
+                &quot;{displayText}
+                <span className="cursor-block" aria-hidden />
+                &quot;
+              </span>
+              <span className="text-muted">;</span>
+            </p>
+            <p className="text-muted max-w-lg mx-auto lg:mx-0 mb-8 leading-relaxed">
+              I design and ship reliable backend systems with{" "}
+              <span className="text-main font-medium">.NET Core</span>,{" "}
+              <span className="text-main font-medium">SQL Server</span> and{" "}
+              <span className="text-main font-medium">REST APIs</span> — currently
+              engineering enterprise solutions at Symphony Softtech Ltd.
+            </p>
+            <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+              <Link
+                href="https://github.com/Sikhul007?tab=repositories"
+                target="_blank"
+                className="inline-flex items-center gap-2 font-mono text-sm font-semibold px-6 py-3 rounded-md bg-[#7C5CFF] text-white hover:bg-[#8f74ff] transition-colors shadow-[0_0_24px_rgba(124,92,255,.35)]"
+              >
+                <FaGithub /> view_work()
+              </Link>
+              <Link
+                href="https://www.linkedin.com/in/md-sikhul-islam-shihab/"
+                target="_blank"
+                className="inline-flex items-center gap-2 font-mono text-sm font-semibold px-6 py-3 rounded-md border border-line bg-panel text-main hover:border-[#7C5CFF] transition-colors"
+              >
+                <FaLinkedin /> connect()
+              </Link>
+            </div>
           </div>
-        </div>
 
-        {/* Image Section */}
-        <div className="relative w-40 h-40 sm:w-56 sm:h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 flex-shrink-0 mx-auto animate-fade-in flex items-center justify-center bg-gray-50 border-2 border-black rounded-lg">
-          <Image
-            src="/images/shihab.jpg"
-            alt="Profile Photo"
-            layout="fill"
-            objectFit="contain"
-            className="rounded-lg p-1"
-            quality={100}
-            priority
-          />
+          {/* Right — terminal card with photo + API response */}
+          <div className="w-full lg:w-1/2 fade-up-1">
+            <div className="bg-panel border border-line rounded-xl overflow-hidden glow-purple max-w-lg mx-auto">
+              {/* window chrome */}
+              <div className="flex items-center gap-2 px-4 py-3 bg-raised border-b border-line">
+                <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+                <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+                <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+                <span className="font-mono text-xs text-muted ml-3">shihab@backend: ~</span>
+              </div>
+              <div className="p-5 sm:p-6">
+                <div className="flex items-start gap-5">
+                  <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-lg overflow-hidden border border-line">
+                    <Image
+                      src="/images/shihab.jpg"
+                      alt="Md. Sikhul Islam Shihab"
+                      fill
+                      className="object-cover"
+                      quality={100}
+                      priority
+                    />
+                  </div>
+                  <pre className="font-mono text-[11px] sm:text-xs leading-relaxed overflow-x-auto scroll-thin flex-1">
+                    <code>
+                      <span className="text-muted">$ </span>
+                      <span className="text-main">curl -X </span>
+                      <span className="text-green">GET</span>
+                      <span className="text-main"> /api/profile</span>
+                      {"\n"}
+                      <span className="text-muted">{"{"}</span>
+                      {"\n  "}
+                      <span className="text-purple">&quot;status&quot;</span>
+                      <span className="text-muted">: </span>
+                      <span className="text-green">200</span>
+                      <span className="text-muted">,</span>
+                      {"\n  "}
+                      <span className="text-purple">&quot;stack&quot;</span>
+                      <span className="text-muted">: [</span>
+                      <span className="text-amber">&quot;.NET Core&quot;</span>
+                      <span className="text-muted">, </span>
+                      <span className="text-amber">&quot;C#&quot;</span>
+                      <span className="text-muted">,</span>
+                      {"\n            "}
+                      <span className="text-amber">&quot;SQL Server&quot;</span>
+                      <span className="text-muted">, </span>
+                      <span className="text-amber">&quot;NestJS&quot;</span>
+                      <span className="text-muted">],</span>
+                      {"\n  "}
+                      <span className="text-purple">&quot;cgpa&quot;</span>
+                      <span className="text-muted">: </span>
+                      <span className="text-green">3.87</span>
+                      <span className="text-muted">,</span>
+                      {"\n  "}
+                      <span className="text-purple">&quot;open_to_work&quot;</span>
+                      <span className="text-muted">: </span>
+                      <span className="text-green">true</span>
+                      {"\n"}
+                      <span className="text-muted">{"}"}</span>
+                    </code>
+                  </pre>
+                </div>
+                <div className="mt-4 pt-4 border-t border-line flex items-center justify-between font-mono text-[11px] sm:text-xs">
+                  <span className="text-muted">response_time: <span className="text-green">42ms</span></span>
+                  <span className="text-muted">location: <span className="text-amber">&quot;Dhaka, BD&quot;</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
-// --- About Me Section Component (No change) ---
-const AboutMeSection: React.FC = () => {
-  const skills = [
-    "HTML",
-    "CSS",
-    "JavaScript",
-    "TypeScript",
-    "React",
-    "Next.js",
-    "Tailwind CSS",
-    "Bootstrap",
-    "PHP",
-    "MySQL",
-    "PostgreSQL",
-    "MongoDB",
-    "Node.js",
-    "Express.js",
-    "Nest.js",
-    "Python",
-    "ASP.NET MVC",
-    "C#",
-    "SQL Server",
-    "Git",
-    "GitHub",
-    "REST APIs",
-    "Postman",
-    "Figma",
-    "Responsive Design",
-    "UI/UX Principles",
-    "Problem Solving",
-    "Critical Thinking",
-    "Teamwork",
-    "Communication",
+/* ============================== ABOUT ============================== */
+const AboutSection: React.FC = () => {
+  const skillGroups: { label: string; color: string; items: string[] }[] = [
+    {
+      label: "backend",
+      color: "text-purple",
+      items: ["C#", "ASP.NET MVC", ".NET Core", "Node.js", "Express.js", "Nest.js", "PHP", "Python", "REST APIs"],
+    },
+    {
+      label: "databases",
+      color: "text-green",
+      items: ["SQL Server", "PostgreSQL", "MySQL", "MongoDB"],
+    },
+    {
+      label: "frontend",
+      color: "text-amber",
+      items: ["TypeScript", "JavaScript", "React", "Next.js", "Tailwind CSS", "Bootstrap", "HTML", "CSS", "Responsive Design"],
+    },
+    {
+      label: "tools_and_soft_skills",
+      color: "text-purple",
+      items: ["Git", "GitHub", "Postman", "Figma", "UI/UX Principles", "Problem Solving", "Critical Thinking", "Teamwork", "Communication"],
+    },
   ];
 
   return (
-    <section
-      id="about"
-      className="bg-gray-100 py-12 md:py-16 border-b-2 border-black"
-    >
+    <section id="about" className="py-16 md:py-24 border-b border-line bg-void">
       <div className="container mx-auto px-4 sm:px-6">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">
-          About Me
-        </h2>
-        <div className="flex flex-col md:flex-row items-center md:items-stretch gap-8">
-          {/* Description - left part */}
-          <div className="md:w-1/2 flex flex-col justify-center items-center text-gray-700 text-center min-h-[340px]">
-            <div className="w-full max-w-lg">
-              <p className="text-base md:text-lg mb-4 leading-relaxed">
-                Hello! I&apos;m Md. Sikhul Islam Shihab, a passionate Computer
-                Science student at
-                <a
-                  href="https://www.aiub.edu/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-indigo-700 font-semibold hover:underline"
-                >
-                  {" "}
-                  American International University-Bangladesh (AIUB)
-                </a>{" "}
-                and a Software Engineer Intern at
-                <a
-                  href="https://www.symphonysofttech.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-indigo-700 font-semibold hover:underline"
-                >
-                  {" "}
-                  Symphony Softtech Ltd.
-                </a>
-                . My journey in tech is driven by a deep interest in Web
-                Development, Software Engineering, and scalable backend
-                solutions. I thrive on bringing ideas to life through code and
-                constantly seek to expand my knowledge in various technologies.
-              </p>
-              <p className="text-base md:text-lg mb-4 leading-relaxed">
-                My expertise spans across foundational web technologies like
-                HTML, CSS, and JavaScript, extending to modern frameworks. I
-                also have experience with PHP for backend development, and
-                hands-on exposure to ASP.NET MVC and Postman API for robust
-                development and testing practices.
-                <br />
-                During my internship at Symphony Softtech Ltd., I worked with
-                experienced engineers to deliver robust backend solutions for
-                enterprise clients, focusing on RESTful APIs, secure
-                authentication, and database optimization.
-              </p>
-              <p className="text-base md:text-lg leading-relaxed">
-                Beyond the lines of code, I&apos;m enthusiastic about teaching
-                and nurturing future tech professionals. My goal is to craft
-                efficient, user-centric, and semi-automated digital solutions
-                that make a tangible difference. I&apos;m always eager to
-                connect with fellow enthusiasts and collaborators!
-              </p>
-            </div>
+        <EndpointHeader path="/api/about" title="About Me" />
+
+        <div className="flex flex-col md:flex-row items-center md:items-stretch gap-10 max-w-5xl mx-auto">
+          <div className="md:w-3/5 text-muted leading-relaxed space-y-4 text-base">
+            <p>
+              I&apos;m a Computer Science graduate from{" "}
+              <a
+                href="https://www.aiub.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple font-medium hover:underline underline-offset-4"
+              >
+                American International University-Bangladesh (AIUB)
+              </a>{" "}
+              and a Software Engineer Intern at{" "}
+              <a
+                href="https://www.symphonysofttech.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple font-medium hover:underline underline-offset-4"
+              >
+                Symphony Softtech Ltd.
+              </a>
+              , where I build backend systems that enterprise clients depend on every day.
+            </p>
+            <p>
+              My focus is the server side: designing RESTful APIs with{" "}
+              <span className="text-main">.NET Core</span>, securing them with role-based
+              authentication, and tuning <span className="text-main">SQL Server</span> queries
+              until they&apos;re fast and reliable. I also work comfortably across the full
+              stack with TypeScript, React and Next.js when a project calls for it.
+            </p>
+            <p>
+              Beyond the code, I&apos;m enthusiastic about teaching and mentoring future tech
+              professionals. My goal is simple: build efficient, user-centric systems that make
+              a tangible difference — and keep learning at every step.
+            </p>
           </div>
-          {/* Image - right part */}
-          <div className="md:w-1/2 flex items-center justify-center">
-            <div className="relative w-64 h-64 sm:w-80 sm:h-80 flex-shrink-0 flex items-center justify-center bg-gray-50 border-2 border-black rounded-lg">
+          <div className="md:w-2/5 flex items-center justify-center">
+            <div className="relative w-60 h-60 sm:w-72 sm:h-72 rounded-xl overflow-hidden border border-line glow-purple">
               <Image
                 src="/images/shihab2.jpg"
-                alt="About Me Illustration"
-                layout="fill"
-                objectFit="contain"
+                alt="Md. Sikhul Islam Shihab"
+                fill
+                className="object-cover"
                 quality={100}
-                priority
-                className="rounded-lg p-2"
               />
             </div>
           </div>
         </div>
 
-        {/* Education Section */}
-        <div className="mt-12">
-          <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 text-center">
-            Education
-          </h3>
-          <div className="bg-white p-6 rounded-lg border-2 border-black shadow-md max-w-2xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-2">
-              <h4 className="text-xl font-bold text-gray-800">
-                BSc in Computer Science and Engineering
-              </h4>
-              <span className="bg-gray-800 text-white text-xs px-3 py-1 rounded-full mt-2 md:mt-0">
-                2022 - 2025
+        {/* Education */}
+        <div className="mt-16 max-w-3xl mx-auto">
+          <div className="bg-panel border border-line rounded-xl p-6 sm:p-8 card-hover">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-2">
+              <h3 className="font-display text-xl font-bold text-main">
+                BSc in Computer Science &amp; Engineering
+              </h3>
+              <span className="font-mono text-xs bg-raised border border-line text-green px-3 py-1 rounded-full w-fit">
+                2022 — 2025
               </span>
             </div>
-            <p className="text-gray-600 font-medium">
+            <p className="text-purple font-medium mb-2">
               American International University-Bangladesh (AIUB)
             </p>
-            <p className="text-gray-700 mt-2">
-              Focused on software engineering, web development, and software
-              requrirement analysis. Maintained excellent academic standing with
-              a CGPA of 3.87/4.0.
+            <p className="text-muted text-sm leading-relaxed">
+              Focused on software engineering, web development and software requirement
+              analysis. Graduated with a CGPA of{" "}
+              <span className="text-main font-semibold">3.87 / 4.00</span> and five Dean&apos;s
+              Awards for academic excellence.
             </p>
           </div>
         </div>
 
-        {/* Skills Section */}
-        <div className="mt-12">
-          <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 text-center">
-            My Skills
+        {/* Skills as namespaces */}
+        <div className="mt-16 max-w-4xl mx-auto">
+          <h3 className="font-display text-2xl font-bold text-main text-center mb-8">
+            Tech Stack
           </h3>
-          <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-            {skills.map((skill, index) => (
-              <span
-                key={index}
-                className="bg-gray-800 text-white text-sm sm:text-base px-4 py-2 rounded-full shadow-md border border-black transform hover:scale-105 transition-transform duration-200"
-              >
-                {skill}
-              </span>
+          <div className="space-y-6">
+            {skillGroups.map((group) => (
+              <div key={group.label} className="bg-panel border border-line rounded-xl p-5 sm:p-6">
+                <p className="font-mono text-sm mb-4">
+                  <span className="text-purple">namespace</span>{" "}
+                  <span className={group.color}>{group.label}</span>{" "}
+                  <span className="text-muted">{"{"}</span>
+                </p>
+                <div className="flex flex-wrap gap-2.5 pl-4">
+                  {group.items.map((skill) => (
+                    <span
+                      key={skill}
+                      className="font-mono text-xs sm:text-sm bg-raised border border-line text-main px-3 py-1.5 rounded-md hover:border-[#7C5CFF] hover:text-purple transition-colors cursor-default"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+                <p className="font-mono text-sm text-muted mt-3">{"}"}</p>
+              </div>
             ))}
           </div>
         </div>
@@ -445,76 +532,54 @@ const AboutMeSection: React.FC = () => {
   );
 };
 
+/* ============================== EXPERIENCE ============================== */
 const ExperienceSection: React.FC = () => {
-  // You can update this link as needed
-  const companyUrl = "https://www.symphonysofttech.com/";
+  const logs = [
+    "Built and maintained RESTful APIs and backend services using .NET Core.",
+    "Optimized SQL Server databases, improving query performance and reliability.",
+    "Implemented role-based authentication and security features.",
+    "Contributed to system design, debugging and testing for scalable solutions.",
+    "Collaborated with senior engineers on efficient backend architecture.",
+  ];
   return (
-    <section
-      id="experience"
-      className="bg-white py-12 md:py-16 border-b-2 border-black"
-    >
+    <section id="experience" className="py-16 md:py-24 border-b border-line bg-void grid-bg">
       <div className="container mx-auto px-4 sm:px-6">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-10 text-center">
-          Experience
-        </h2>
-        <div className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto">
-          <div className="bg-gray-100 rounded-lg border-2 border-black overflow-hidden shadow-md hover:shadow-lg transition-shadow w-full max-w-3xl mx-auto flex flex-col">
-            <div className="p-8 flex flex-col h-full">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
-                <h3 className="text-xl font-bold text-gray-800 mb-2 sm:mb-0">
+        <EndpointHeader path="/api/experience" title="Experience" />
+
+        <div className="max-w-3xl mx-auto bg-panel border border-line rounded-xl overflow-hidden card-hover">
+          <div className="flex items-center gap-2 px-4 py-3 bg-raised border-b border-line">
+            <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+            <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+            <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+            <span className="font-mono text-xs text-muted ml-3">experience.log</span>
+          </div>
+          <div className="p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
+              <div>
+                <h3 className="font-display text-xl font-bold text-main">
                   Software Engineer Intern
                 </h3>
-                <span className="bg-gray-800 text-white text-xs px-3 py-1 rounded-full">
-                  July 2025 – Present
-                </span>
+                <a
+                  href="https://www.symphonysofttech.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-purple font-medium hover:underline underline-offset-4 text-sm"
+                >
+                  Symphony Softtech Ltd. ↗
+                </a>
               </div>
-              <div className="text-gray-700 text-sm mb-2 font-semibold flex items-center text-justify">
-                {companyUrl && (
-                  <a
-                    href={companyUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-3 py-1 rounded bg-gray-800 text-white text-xs font-semibold border border-black hover:bg-gray-700 transition-colors"
-                  >
-                    Symphony Softtech Ltd.
-                  </a>
-                )}
-              </div>
-              {/* <div className="text-gray-700 text-sm mb-4 text-justify">
-                During my internship at Symphony Softtech Ltd., I worked closely
-                with a team of experienced engineers to deliver robust backend
-                solutions for enterprise clients. My responsibilities included
-                designing and developing RESTful APIs using .NET Core,
-                implementing secure role-based authentication, and optimizing
-                SQL Server queries for high performance. I also participated in
-                code reviews, contributed to architectural decisions, and
-                collaborated across teams to ensure seamless integration of
-                backend services with frontend applications. This experience
-                enhanced my skills in scalable backend development, database
-                management, and teamwork in a professional software environment.
-              </div> */}
-              <ul className="list-disc list-inside text-gray-700 text-sm space-y-1 pl-2 mb-2 text-justify">
-                <li>
-                  Built and maintained RESTful APIs and backend services using
-                  .NET Core.
-                </li>
-                <li>
-                  Optimized SQL Server databases, improving query performance
-                  and reliability.
-                </li>
-                <li>
-                  Implemented role-based authentication and security features.
-                </li>
-                <li>
-                  Contributed to system design, debugging, and testing to ensure
-                  scalable solutions.
-                </li>
-                <li>
-                  Collaborated with senior engineers in developing efficient
-                  backend architecture.
-                </li>
-              </ul>
+              <span className="font-mono text-xs bg-raised border border-line text-green px-3 py-1 rounded-full w-fit">
+                Jul 2025 — Present
+              </span>
             </div>
+            <ul className="space-y-3">
+              {logs.map((log, i) => (
+                <li key={i} className="flex gap-3 text-sm text-muted leading-relaxed">
+                  <span className="font-mono text-green flex-shrink-0 mt-0.5">[OK]</span>
+                  <span>{log}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
@@ -522,117 +587,190 @@ const ExperienceSection: React.FC = () => {
   );
 };
 
+/* ============================== PROJECTS ============================== */
 const ProjectsSection: React.FC = () => {
   const projects = [
     {
-      title:
-        "Hotel Amin International (Next.js, Tailwind CSS, Next.js and PostgreSQL)",
+      title: "Hotel Amin International",
+      tags: ["Next.js", "NestJS", "PostgreSQL", "Tailwind"],
       description:
-        "Led the redesign of an e-commerce platform focusing on improved user experience, faster load times, and mobile responsiveness. Implemented a new payment gateway and enhanced product catalog features.",
+        "Full-stack hotel management platform with booking flows, an admin dashboard and a PostgreSQL-backed NestJS API.",
       imageUrl: "/images/pro_1.png",
       projectUrl: "https://github.com/Sikhul007/Hotel-Amin-Adv.-Web",
     },
     {
-      title: "Travel Agency (Html, CSS, Js, Php)",
+      title: "Land Digitalization & Fraud Prevention",
+      tags: ["AI", "Blockchain", "System Design"],
       description:
-        "The front-end focuses on designing and validation to ensure a seamless user experience, while the backend handles all feature logic and operations. Additionally, efficient database management ensures secure storage and retrieval of data.",
-      imageUrl: "/images/pro_2.png",
+        "Integrated land and real-estate digitalization system using AI for fraud detection and blockchain for immutable transactions.",
+      imageUrl: "/images/diagram.png",
       projectUrl: "https://github.com/Sikhul007/Land-digitalization-sre",
     },
     {
-      title: "Amazon (Front-end)",
+      title: ".NET Movie Backend",
+      tags: ["C#", "ASP.NET", "3-Tier Architecture"],
       description:
-        "Replicated the Amazon homepage using HTML and CSS, creating a responsive layout that closely mirrors the original design for an optimal user experience across different devices.",
-      imageUrl: "/images/pro_5.png",
-      projectUrl: "https://github.com/Sikhul007/Land-digitalization-sre",
-    },
-    {
-      title: ".Net Framework (Backend using 3 tier architecture)",
-      description:
-        "Created an automated testing suite for a web application using Selenium and Python. Improved testing efficiency by 40% and reduced manual testing time.",
+        "Backend built on a clean 3-tier architecture with separated data, business and presentation layers.",
       imageUrl: "/images/pro_4.png",
       projectUrl: "https://github.com/Sikhul007/Dot-Net/tree/main/Movie",
     },
     {
-      title: "Travel Agency (C#)",
+      title: "Travel Agency Platform",
+      tags: ["PHP", "MySQL", "JavaScript"],
       description:
-        "The project involves front-end development for a seamless user interface, database management for efficient data storage, presentation to showcase the work effectively, and report writing to document the process and findings comprehensively.",
+        "Booking platform with validated front-end forms, PHP business logic and secure database-backed storage.",
+      imageUrl: "/images/pro_2.png",
+      projectUrl: "https://github.com/Sikhul007/Land-digitalization-sre",
+    },
+    {
+      title: "Travel Agency (Desktop)",
+      tags: ["C#", "WinForms", "SQL Server"],
+      description:
+        "Desktop travel management app covering UI, database management, and full documentation of the build process.",
       imageUrl: "/images/pro_3.png",
       projectUrl: "https://github.com/Sikhul007/Travel-agency-C-sharp",
     },
     {
-      title:
-        "Integrated Land and Real Estate Digitalization and Fraud Prevention System",
+      title: "Amazon Homepage Clone",
+      tags: ["HTML", "CSS", "Responsive"],
       description:
-        "Developed an integrated land and real estate digitalization and fraud prevention system leveraging AI for fraud detection and Blockchain for immutable transactions. Focused on enhancing transparency and security in property management.",
-      imageUrl: "/images/diagram.png",
+        "Pixel-close, fully responsive recreation of the Amazon homepage across desktop, tablet and mobile breakpoints.",
+      imageUrl: "/images/pro_5.png",
       projectUrl: "https://github.com/Sikhul007/Land-digitalization-sre",
     },
   ];
 
   return (
-    <section
-      id="projects"
-      className="bg-white py-12 md:py-16 border-b-2 border-black"
-    >
+    <section id="projects" className="py-16 md:py-24 border-b border-line bg-void">
       <div className="container mx-auto px-4 sm:px-6">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-10 text-center">
-          Projects
-        </h2>
-
-        <div className="flex flex-wrap justify-center lg:justify-between gap-4 lg:gap-6 max-w-6xl mx-auto">
-          {projects.map((project, index) => (
-            <div
-              key={index}
-              className="bg-gray-100 rounded-lg border-2 border-black overflow-hidden shadow-md hover:shadow-lg transition-shadow w-full md:w-[calc(50%-1rem)] lg:w-[calc(33%-1rem)] mx-auto lg:mx-0 flex flex-col h-[500px]"
+        <EndpointHeader
+          path="/api/projects"
+          title="Projects"
+          sub="Selected builds — from enterprise-style backends to full-stack products."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {projects.map((project) => (
+            <a
+              key={project.title}
+              href={project.projectUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group bg-panel border border-line rounded-xl overflow-hidden card-hover flex flex-col focus-visible:ring-2 focus-visible:ring-[#7C5CFF] outline-none"
             >
-              <div className="relative w-full h-52 flex items-center justify-center group flex-shrink-0">
+              <div className="relative w-full h-44 bg-raised border-b border-line overflow-hidden">
                 <Image
                   src={project.imageUrl}
                   alt={project.title}
-                  layout="fill"
-                  objectFit="contain"
-                  className="border-b-2 border-black p-2 transition-transform duration-300 group-hover:scale-110"
+                  fill
+                  className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
-              <div className="flex flex-col flex-1 p-6 min-h-0">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-bold text-gray-800">
-                    {project.title}
-                  </h3>
-                </div>
-                <div
-                  className="text-gray-700 overflow-y-auto mb-2"
-                  style={{ maxHeight: "90px" }}
-                >
-                  {project.description}
-                </div>
-                {project.projectUrl && (
-                  <div className="mt-auto text-center">
-                    <button
-                      className={`inline-block px-5 py-2 rounded-md shadow-sm border-2 border-black text-sm font-semibold transition-colors ${
-                        project.projectUrl && project.projectUrl !== "#"
-                          ? "bg-gray-800 text-white hover:bg-gray-700"
-                          : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                      }`}
-                      type="button"
-                      disabled={
-                        !project.projectUrl || project.projectUrl === "#"
-                      }
-                      onClick={() => {
-                        if (project.projectUrl && project.projectUrl !== "#") {
-                          window.open(
-                            project.projectUrl,
-                            "_blank",
-                            "noopener,noreferrer"
-                          );
-                        }
-                      }}
+              <div className="p-5 flex flex-col flex-1">
+                <h3 className="font-display text-lg font-bold text-main mb-2 group-hover:text-purple transition-colors">
+                  {project.title}
+                </h3>
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="font-mono text-[10px] uppercase tracking-wide bg-raised border border-line text-amber px-2 py-0.5 rounded"
                     >
-                      View on GitHub
-                    </button>
-                  </div>
-                )}
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-muted text-sm leading-relaxed flex-1">{project.description}</p>
+                <p className="font-mono text-xs text-green mt-4">
+                  view_source() <span className="text-muted">→ GitHub</span>
+                </p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ============================== AWARDS ============================== */
+const AwardsSection: React.FC = () => {
+  const awards = [
+    {
+      title: "Dean's Award",
+      issuer: "AIUB — Faculty of Science and Technology",
+      date: "Fall 2022-23",
+      description: "GPA 3.91 in the CSE program, recognizing outstanding academic achievement.",
+      imageUrl: "/images/fall-22-23.jpg",
+    },
+    {
+      title: "Dean's Award",
+      issuer: "AIUB — Faculty of Science and Technology",
+      date: "Spring 2022-23",
+      description: "Perfect GPA 4.00 in the CSE program, recognizing outstanding academic achievement.",
+      imageUrl: "/images/spring-22-23.jpg",
+    },
+    {
+      title: "Dean's Award",
+      issuer: "AIUB — Faculty of Science and Technology",
+      date: "Fall 2023-24",
+      description: "GPA 3.85 in the CSE program, recognizing outstanding academic achievement.",
+      imageUrl: "/images/fall-23-24.jpg",
+    },
+    {
+      title: "Dean's Award",
+      issuer: "AIUB — Faculty of Science and Technology",
+      date: "Spring 2023-24",
+      description: "GPA 3.80 in the CSE program, recognizing outstanding academic achievement.",
+      imageUrl: "/images/spring-23-24.jpg",
+    },
+    {
+      title: "Dean's Award",
+      issuer: "AIUB — Faculty of Science and Technology",
+      date: "Fall 2024-25",
+      description: "GPA 3.85 in the CSE program, recognizing outstanding academic achievement.",
+      imageUrl: "/images/fall-24-25.jpg",
+    },
+    {
+      title: "Poster Presentation Certificate",
+      issuer: "AIUB Computer Club",
+      date: "2024",
+      description:
+        "Excellent performance in the Science Poster Contest (Senior Group), organized by the Department of Physics and ACC.",
+      imageUrl: "/images/poster-presentation.jpg",
+    },
+  ];
+
+  return (
+    <section id="awards" className="py-16 md:py-24 border-b border-line bg-void grid-bg">
+      <div className="container mx-auto px-4 sm:px-6">
+        <EndpointHeader
+          path="/api/awards"
+          title="Awards & Certificates"
+          sub="Five Dean's Awards across consecutive semesters — consistency, compiled."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {awards.map((award, index) => (
+            <div
+              key={index}
+              className="bg-panel border border-line rounded-xl overflow-hidden card-hover flex flex-col"
+            >
+              <div className="relative w-full h-44 bg-raised border-b border-line group overflow-hidden">
+                <Image
+                  src={award.imageUrl}
+                  alt={award.title}
+                  fill
+                  className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+              <div className="p-5 flex flex-col flex-1">
+                <div className="flex justify-between items-start gap-2 mb-2">
+                  <h3 className="font-display text-lg font-bold text-main">🏅 {award.title}</h3>
+                  <span className="font-mono text-[10px] bg-raised border border-line text-green px-2 py-1 rounded-full whitespace-nowrap">
+                    {award.date}
+                  </span>
+                </div>
+                <p className="font-mono text-xs text-purple mb-2">{award.issuer}</p>
+                <p className="text-muted text-sm leading-relaxed">{award.description}</p>
               </div>
             </div>
           ))}
@@ -642,358 +780,175 @@ const ProjectsSection: React.FC = () => {
   );
 };
 
-// --- Contact Section Component ---
+/* ============================== CONTACT ============================== */
 const ContactSection: React.FC = () => {
-  // Contact form state
-  const [form, setForm] = React.useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
-  const [sent, setSent] = React.useState(false);
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
-  // Handle input change
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Handle form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Send to formsubmit.co
-    await fetch("https://formsubmit.co/ajax/sikhulshihab@gmail.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...form,
-        _subject: "New Portfolio Contact Message",
-        _captcha: "false",
-      }),
-    });
-    setSent(true);
-    setForm({ name: "", email: "", subject: "", message: "" });
-    // Optionally scroll to top or show a message
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setStatus("sending");
+    try {
+      await fetch("https://formsubmit.co/ajax/sikhulshihab@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          _subject: "New Portfolio Contact Message",
+          _captcha: "false",
+        }),
+      });
+      setStatus("sent");
+      setForm({ name: "", email: "", subject: "", message: "" });
+    } catch {
+      setStatus("error");
+    }
   };
 
-  return (
-    <section
-      id="contact"
-      className="bg-gray-100 py-12 md:py-16 border-b-2 border-black"
-    >
-      <div className="container mx-auto px-4 sm:px-6">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-10 text-center">
-          Get In Touch
-        </h2>
+  const inputClass =
+    "w-full bg-raised border border-line rounded-md px-4 py-2.5 text-main placeholder:text-[#4A5568] font-body text-sm focus:outline-none focus:border-[#7C5CFF] focus:ring-1 focus:ring-[#7C5CFF] transition-colors";
 
-        {/* Two-part layout: Contact Form on Left, Contact Info & Social Media on Right */}
-        <div className="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
-          {/* Left Side - Contact Form */}
-          <div className="w-full lg:w-1/2">
-            <div className="bg-white p-8 rounded-lg shadow-md border-2 border-black h-full">
-              <h3 className="text-xl font-bold mb-6 text-gray-800">
-                Send Me a Message
-              </h3>
-              {sent ? (
-                <div className="text-green-700 text-lg font-semibold text-center py-8">
-                  Thank you for your message! I will get back to you soon.
+  return (
+    <section id="contact" className="py-16 md:py-24 border-b border-line bg-void">
+      <div className="container mx-auto px-4 sm:px-6">
+        <EndpointHeader
+          method="POST"
+          path="/api/contact"
+          title="Get In Touch"
+          sub="Have a project, a role, or just a question? Send a request — I respond fast."
+        />
+
+        <div className="flex flex-col lg:flex-row gap-8 max-w-5xl mx-auto">
+          {/* Form */}
+          <div className="w-full lg:w-3/5">
+            <div className="bg-panel border border-line rounded-xl p-6 sm:p-8 h-full">
+              <p className="font-mono text-sm text-muted mb-6">
+                <span className="text-green">POST</span> /api/contact{" "}
+                <span className="text-muted">— body:</span>
+              </p>
+              {status === "sent" ? (
+                <div className="text-center py-12">
+                  <p className="font-mono text-green text-lg mb-2">201 Created ✓</p>
+                  <p className="text-muted">
+                    Thank you for your message! I&apos;ll get back to you soon.
+                  </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit}>
-                  <div className="mb-6">
-                    <label
-                      htmlFor="name"
-                      className="block text-gray-700 font-medium mb-2"
-                    >
-                      Name
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                      <label htmlFor="name" className="block font-mono text-xs text-purple mb-2">
+                        &quot;name&quot;:
+                      </label>
+                      <input
+                        type="text" id="name" name="name" required
+                        value={form.name} onChange={handleChange}
+                        className={inputClass} placeholder="Your name"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block font-mono text-xs text-purple mb-2">
+                        &quot;email&quot;:
+                      </label>
+                      <input
+                        type="email" id="email" name="email" required
+                        value={form.email} onChange={handleChange}
+                        className={inputClass} placeholder="you@example.com"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label htmlFor="subject" className="block font-mono text-xs text-purple mb-2">
+                      &quot;subject&quot;:
                     </label>
                     <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      value={form.name}
-                      onChange={handleChange}
-                      className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
-                      placeholder="Your Name"
+                      type="text" id="subject" name="subject" required
+                      value={form.subject} onChange={handleChange}
+                      className={inputClass} placeholder="What's this about?"
                     />
                   </div>
-                  <div className="mb-6">
-                    <label
-                      htmlFor="email"
-                      className="block text-gray-700 font-medium mb-2"
-                    >
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      value={form.email}
-                      onChange={handleChange}
-                      className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
-                  <div className="mb-6">
-                    <label
-                      htmlFor="subject"
-                      className="block text-gray-700 font-medium mb-2"
-                    >
-                      Subject
-                    </label>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      required
-                      value={form.subject}
-                      onChange={handleChange}
-                      className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
-                      placeholder="Subject of your message"
-                    />
-                  </div>
-                  <div className="mb-6">
-                    <label
-                      htmlFor="message"
-                      className="block text-gray-700 font-medium mb-2"
-                    >
-                      Message
+                  <div>
+                    <label htmlFor="message" className="block font-mono text-xs text-purple mb-2">
+                      &quot;message&quot;:
                     </label>
                     <textarea
-                      id="message"
-                      name="message"
-                      rows={5}
-                      required
-                      value={form.message}
-                      onChange={handleChange}
-                      className="w-full border-2 border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-800 placeholder-gray-300 text-gray-800"
-                      placeholder="Your message here..."
-                    ></textarea>
+                      id="message" name="message" rows={5} required
+                      value={form.message} onChange={handleChange}
+                      className={inputClass} placeholder="Your message here..."
+                    />
                   </div>
-                  <div className="text-center">
-                    <button
-                      type="submit"
-                      className="bg-gray-800 text-white px-8 py-3 rounded-md shadow-md hover:bg-gray-700 transition-colors border-2 border-black text-base font-semibold"
-                    >
-                      Send Message
-                    </button>
-                  </div>
+                  {status === "error" && (
+                    <p className="font-mono text-xs text-[#FF5F57]">
+                      500 — something went wrong. Try again or email me directly.
+                    </p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={status === "sending"}
+                    className="w-full font-mono text-sm font-semibold px-6 py-3 rounded-md bg-[#7C5CFF] text-white hover:bg-[#8f74ff] disabled:opacity-60 transition-colors shadow-[0_0_18px_rgba(124,92,255,.3)]"
+                  >
+                    {status === "sending" ? "sending..." : "send_message()"}
+                  </button>
                 </form>
               )}
             </div>
           </div>
 
-          {/* Right Side - Connect With Me */}
-          <div className="w-full lg:w-1/2">
-            <div className="bg-white p-8 rounded-lg shadow-md border-2 border-black h-full">
-              <h3 className="text-xl font-bold mb-6 text-gray-800">
-                Connect With Me
-              </h3>
-
-              {/* Direct Contact */}
-              <div className="mb-8">
-                <h4 className="text-lg font-medium text-gray-700 mb-4 border-b pb-2">
-                  Direct Contact
-                </h4>
-                <div className="flex flex-col space-y-4">
-                  <a
-                    href="mailto:sikhulshihab@gmail.com"
-                    className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-                    title="Send an Email"
-                    aria-label="Send an email to Sikhul Shihab"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                    sikhulshihab@gmail.com
+          {/* Info */}
+          <div className="w-full lg:w-2/5">
+            <div className="bg-panel border border-line rounded-xl p-6 sm:p-8 h-full flex flex-col gap-6">
+              <div>
+                <p className="font-mono text-xs text-muted uppercase tracking-widest mb-4">
+                  // direct contact
+                </p>
+                <div className="space-y-3 text-sm">
+                  <a href="mailto:sikhulshihab@gmail.com" className="flex items-center gap-3 text-muted hover:text-purple transition-colors">
+                    <span className="text-amber font-mono">@</span> sikhulshihab@gmail.com
                   </a>
-                  <a
-                    href="tel:+8801889031522"
-                    className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-                    title="Call Me"
-                    aria-label="Call Sikhul Shihab"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                    +88 01889031522
+                  <a href="tel:+8801889031522" className="flex items-center gap-3 text-muted hover:text-purple transition-colors">
+                    <span className="text-amber font-mono">☎</span> +88 01889 031522
                   </a>
-                  <div className="flex items-center text-gray-600">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 mr-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
-                    Shaympur, Dhaka, Bangladesh
-                  </div>
+                  <p className="flex items-center gap-3 text-muted">
+                    <span className="text-amber font-mono">⌖</span> Shyampur, Dhaka, Bangladesh
+                  </p>
                 </div>
               </div>
-
-              {/* Social Media */}
-              <div>
-                <h4 className="text-lg font-medium text-gray-700 mb-4 border-b pb-2">
-                  Social Media
-                </h4>
-                <div className="grid grid-cols-2 gap-4">
-                  <a
-                    href="https://github.com/Sikhul007"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-                    title="GitHub Profile"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="mr-2"
+              <div className="border-t border-line pt-6">
+                <p className="font-mono text-xs text-muted uppercase tracking-widest mb-4">
+                  // social
+                </p>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  {[
+                    { name: "GitHub", href: "https://github.com/Sikhul007" },
+                    { name: "LinkedIn", href: "https://www.linkedin.com/in/md-sikhul-islam-shihab/" },
+                    { name: "Twitter", href: "https://twitter.com/sikhulshihab" },
+                    { name: "Facebook", href: "https://www.facebook.com/shihab.sikhul" },
+                    { name: "Instagram", href: "https://www.instagram.com/sikhulshihab/" },
+                    { name: "YouTube", href: "https://www.youtube.com/@sikhulshihab" },
+                  ].map((s) => (
+                    <a
+                      key={s.name}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-muted hover:text-purple transition-colors"
                     >
-                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                    </svg>
-                    GitHub
-                  </a>
-                  <a
-                    href="https://www.linkedin.com/in/md-sikhul-islam-shihab/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-                    title="LinkedIn Profile"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="mr-2"
-                    >
-                      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                    </svg>
-                    LinkedIn
-                  </a>
-                  <a
-                    href="https://twitter.com/sikhulshihab"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-                    title="Twitter Profile"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="mr-2"
-                    >
-                      <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 9.99 9.99 0 01-3.127 1.195 4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-                    </svg>
-                    Twitter
-                  </a>
-                  <a
-                    href="https://www.facebook.com/shihab.sikhul"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-                    title="Facebook Profile"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="mr-2"
-                    >
-                      <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-                    </svg>
-                    Facebook
-                  </a>
-                  <a
-                    href="https://www.instagram.com/sikhulshihab/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-                    title="Instagram Profile"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="mr-2"
-                    >
-                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z" />
-                      <path d="M12 6.865c-2.841 0-5.144 2.303-5.144 5.144s2.303 5.144 5.144 5.144 5.144-2.303 5.144-5.144-2.303-5.144-5.144-5.144zm0 8.485c-1.842 0-3.341-1.499-3.341-3.341s1.499-3.341 3.341-3.341 3.341 1.499 3.341 3.341-1.499 3.341-3.341 3.341z" />
-                      <path d="M19.825 6.575c0 .665-.54 1.205-1.205 1.205s-1.205-.54-1.205-1.205.54-1.205 1.205-1.205 1.205.54 1.205 1.205z" />
-                    </svg>
-                    Instagram
-                  </a>
-                  <a
-                    href="https://www.youtube.com/@sikhulshihab"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-gray-600 hover:text-gray-800 transition-colors"
-                    title="YouTube Channel"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="mr-2"
-                    >
-                      <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
-                    </svg>
-                    YouTube
-                  </a>
+                      <span className="text-purple">→</span> {s.name}
+                    </a>
+                  ))}
                 </div>
+              </div>
+              <div className="mt-auto bg-raised border border-line rounded-lg p-4 font-mono text-xs">
+                <p className="text-muted">
+                  <span className="text-green">$</span> status --current
+                </p>
+                <p className="text-main mt-1">
+                  <span className="text-green">●</span> Open to backend / .NET roles
+                </p>
               </div>
             </div>
           </div>
@@ -1003,159 +958,33 @@ const ContactSection: React.FC = () => {
   );
 };
 
-// --- Awards Section Component ---
-const AwardsSection: React.FC = () => {
-  const awards = [
-    {
-      title: "🏅 Dean's Award",
-      issuer: "American International University-Bangladesh",
-      date: "Fall 2022-2023",
-      description:
-        "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.91 in the CSE program, recognizing outstanding academic achievement.",
-      imageUrl: "/images/fall-22-23.jpg",
-    },
-    {
-      title: "🏅 Dean's Award",
-      issuer: "American International University-Bangladesh",
-      date: "Spring 2022-2023",
-      description:
-        "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 4.00 in the CSE program, recognizing outstanding academic achievement.",
-      imageUrl: "/images/spring-22-23.jpg",
-    },
-    {
-      title: "🏅 Dean's Award",
-      issuer: "American International University-Bangladesh",
-      date: "Fall 2023-2024",
-      description:
-        "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.85 in the CSE program, recognizing outstanding academic achievement.",
-      imageUrl: "/images/fall-23-24.jpg",
-    },
-    {
-      title: "Poster Presentation Certificate",
-      issuer: "AIUB Compurter Club",
-      date: "2024",
-      description:
-        "Presented to Md. Sikhul Islam Shihab for excellent performance in the 2022 Science Poster Contest (Senior Group), organized by the Department of Physics and AIUB Computer Club (ACC).",
-      imageUrl: "/images/poster-presentation.jpg",
-    },
-    {
-      title: "🏅 Dean's Award",
-      issuer: "American International University-Bangladesh",
-      date: "Spring 2023-2024",
-      description:
-        "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.80 in the CSE program, recognizing outstanding academic achievement.",
-      imageUrl: "/images/spring-23-24.jpg",
-    },
-    {
-      title: "🏅 Dean's Award",
-      issuer: "American International University-Bangladesh",
-      date: "Fall 2024-2025",
-      description:
-        "Awarded by AIUB’s Faculty of Science and Technology to me for earning a perfect GPA of 3.85 in the CSE program, recognizing outstanding academic achievement.",
-      imageUrl: "/images/fall-24-25.jpg",
-    },
-  ];
-
-  return (
-    <section
-      id="awards"
-      className="bg-white py-12 md:py-16 border-b-2 border-black"
-    >
-      <div className="container mx-auto px-4 sm:px-6">
-        <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-10 text-center">
-          Awards & Certificates
-        </h2>
-
-        <div className="flex flex-wrap justify-center lg:justify-between gap-4 lg:gap-6 max-w-6xl mx-auto">
-          {awards.map((award, index) => (
-            <div
-              key={index}
-              className="bg-gray-100 rounded-lg border-2 border-black overflow-hidden shadow-md hover:shadow-lg transition-shadow w-full md:w-[calc(50%-1rem)] lg:w-[calc(33%-1rem)] mx-auto lg:mx-0"
-            >
-              <div className="relative w-full h-52 flex items-center justify-center group">
-                <Image
-                  src={award.imageUrl}
-                  alt={award.title}
-                  layout="fill"
-                  objectFit="contain"
-                  className="border-b-2 border-black p-2 transition-transform duration-300 group-hover:scale-110"
-                />
-              </div>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-bold text-gray-800">
-                    {award.title}
-                  </h3>
-                  <span className="bg-gray-800 text-white text-xs px-2 py-1 rounded-full">
-                    {award.date}
-                  </span>
-                </div>
-                <p className="text-gray-600 text-sm mb-2">
-                  Issued by: {award.issuer}
-                </p>
-                <p className="text-gray-700">{award.description}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// --- Main Portfolio Page (Updated for dynamic background) ---
+/* ============================== PAGE ============================== */
 const PortfolioPage: React.FC = () => {
   const [currentYear, setCurrentYear] = useState("");
-
-  // Animation state for Header
-  const [displayText, setDisplayText] = useState("");
-  const [phase, setPhase] = useState("cumulativeLetter");
-  const [partIndex, setPartIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-
   useEffect(() => {
     setCurrentYear(new Date().getFullYear().toString());
   }, []);
 
-  // Determine background class based on partIndex (odd/even)
-  // Only alternate during typing/erasing, not during full display
-  let bgClass = "bg-gray-50";
-  if (phase === "cumulativeLetter" || phase === "erasing") {
-    bgClass =
-      partIndex % 2 === 0
-        ? "bg-gradient-to-br from-blue-200 via-blue-100 to-blue-50"
-        : "bg-gradient-to-br from-yellow-100 via-pink-100 to-pink-50";
-  } else if (phase === "full") {
-    bgClass = "bg-gradient-to-br from-green-100 via-green-50 to-white";
-  }
-
   return (
-    <div
-      className={`${bgClass} min-h-screen font-sans transition-colors duration-700`}
-    >
+    <div className="bg-void text-main min-h-screen font-body">
+      <GlobalStyles />
       <Navbar />
-      <div className="pt-16">
-        <Header
-          displayText={displayText}
-          phase={phase}
-          partIndex={partIndex}
-          setDisplayText={setDisplayText}
-          setPhase={setPhase}
-          setPartIndex={setPartIndex}
-          charIndex={charIndex}
-          setCharIndex={setCharIndex}
-        />
-        <AboutMeSection />
+      <main>
+        <Hero />
+        <AboutSection />
         <ExperienceSection />
         <ProjectsSection />
         <AwardsSection />
         <ContactSection />
-        <footer className="bg-gray-800 text-white text-center py-6 border-t-2 border-black">
-          <p className="text-sm sm:text-base">
-            &copy; {currentYear} Md. Sikhul Islam Shihab. All rights reserved.
-          </p>
-        </footer>
-      </div>
+      </main>
+      <footer className="bg-panel py-8 text-center">
+        <p className="font-mono text-xs text-muted">
+          <span className="text-purple">©</span> {currentYear} Md. Sikhul Islam Shihab{" "}
+          <span className="text-muted">·</span> built with Next.js{" "}
+          <span className="text-muted">·</span>{" "}
+          <span className="text-green">all systems operational</span>
+        </p>
+      </footer>
     </div>
   );
 };
