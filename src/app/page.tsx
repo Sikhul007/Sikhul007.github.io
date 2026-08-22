@@ -903,7 +903,6 @@ const ContactSection: React.FC = () => {
             <div className="bg-panel border border-line rounded-xl p-6 sm:p-8 h-full flex flex-col gap-6">
               <div>
                 <p className="font-mono text-xs text-muted uppercase tracking-widest mb-4">
-                  // direct contact
                 </p>
                 <div className="space-y-3 text-sm">
                   <a href="mailto:sikhulshihab@gmail.com" className="flex items-center gap-3 text-muted hover:text-purple transition-colors">
@@ -919,7 +918,6 @@ const ContactSection: React.FC = () => {
               </div>
               <div className="border-t border-line pt-6">
                 <p className="font-mono text-xs text-muted uppercase tracking-widest mb-4">
-                  // social
                 </p>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   {[
