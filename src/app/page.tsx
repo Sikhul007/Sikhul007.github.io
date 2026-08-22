@@ -901,10 +901,8 @@ const ContactSection: React.FC = () => {
           {/* Info */}
           <div className="w-full lg:w-2/5">
             <div className="bg-panel border border-line rounded-xl p-6 sm:p-8 h-full flex flex-col gap-6">
-              <div>
-                <p className="font-mono text-xs text-muted uppercase tracking-widest mb-4">
-                </p>
-                <div className="space-y-3 text-sm">
+             <div>
+  <div className="space-y-3 text-sm">
                   <a href="mailto:sikhulshihab@gmail.com" className="flex items-center gap-3 text-muted hover:text-purple transition-colors">
                     <span className="text-amber font-mono">@</span> sikhulshihab@gmail.com
                   </a>
@@ -917,9 +915,7 @@ const ContactSection: React.FC = () => {
                 </div>
               </div>
               <div className="border-t border-line pt-6">
-                <p className="font-mono text-xs text-muted uppercase tracking-widest mb-4">
-                </p>
-                <div className="grid grid-cols-2 gap-3 text-sm">
+  <div className="grid grid-cols-2 gap-3 text-sm">
                   {[
                     { name: "GitHub", href: "https://github.com/Sikhul007" },
                     { name: "LinkedIn", href: "https://www.linkedin.com/in/md-sikhul-islam-shihab/" },
