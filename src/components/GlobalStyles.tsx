@@ -67,6 +67,24 @@ const GlobalStyles: React.FC = () => (
       margin-left: 2px; animation: blink 1s step-end infinite;
     }
 
+    @keyframes modalBackdropFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes modalPopIn {
+      from { opacity: 0; transform: scale(0.94) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .animate-backdrop {
+      animation: modalBackdropFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-modal-card {
+      animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
     @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
     .fade-up   { animation: fadeUp .7s ease both; }
     .fade-up-1 { animation: fadeUp .7s ease .12s both; }
@@ -75,6 +93,7 @@ const GlobalStyles: React.FC = () => (
     @media (prefers-reduced-motion: reduce) {
       .fade-up, .fade-up-1, .fade-up-2 { animation: none; }
       .cursor-block { animation: none; }
+      .animate-backdrop, .animate-modal-card { animation: none; }
       html { scroll-behavior: auto; }
     }
 
