@@ -29,9 +29,9 @@ const GlobalStyles: React.FC = () => (
 
     html { scroll-behavior: smooth; }
 
-    body, .font-body, .font-display, .font-mono, .font-cavolini {
-      font-family: Cavolini, 'Segoe Print', 'Bradley Hand', cursive;
-    }
+    body, .font-body { font-family: 'Inter', system-ui, sans-serif; }
+    .font-display    { font-family: 'Space Grotesk', system-ui, sans-serif; }
+    .font-mono       { font-family: 'JetBrains Mono', ui-monospace, monospace; }
 
     .bg-void   { background-color: var(--void); }
     .bg-panel  { background-color: var(--panel); }

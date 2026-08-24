@@ -10,7 +10,7 @@ const AboutSection: React.FC = () => {
         <EndpointHeader path="/api/about" title="About Me" />
 
         <div className="flex flex-col md:flex-row items-center md:items-stretch gap-10 max-w-5xl mx-auto">
-          <div className="md:w-3/5 text-muted leading-relaxed space-y-4 text-base font-cavolini text-justify">
+          <div className="md:w-3/5 text-muted leading-relaxed space-y-4 text-base text-justify">
             <p>
               I&apos;m a{" "}
               <a
