@@ -93,14 +93,14 @@ const Hero: React.FC = () => {
               <Link
                 href="https://github.com/Sikhul007?tab=repositories"
                 target="_blank"
-                className="inline-flex items-center gap-2 font-mono text-sm font-semibold px-6 py-3 rounded-md bg-purple text-main hover:bg-raised transition-colors shadow-lg"
+                className="inline-flex items-center gap-2 font-mono text-sm font-semibold px-6 py-3 rounded-md bg-[#B2967D] text-main hover:bg-[#C4AE99] transition-colors shadow-lg"
               >
                 <FaGithub /> view_work()
               </Link>
               <Link
                 href="https://www.linkedin.com/in/md-sikhul-islam-shihab/"
                 target="_blank"
-                className="inline-flex items-center gap-2 font-mono text-sm font-semibold px-6 py-3 rounded-md border border-line bg-panel text-main hover:border-purple transition-colors"
+                className="inline-flex items-center gap-2 font-mono text-sm font-semibold px-6 py-3 rounded-md border border-[#707663] bg-panel text-main hover:bg-[#707663] hover:text-[#FCFAF6] transition-colors"
               >
                 <FaLinkedin /> connect()
               </Link>

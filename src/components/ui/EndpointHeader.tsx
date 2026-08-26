@@ -14,7 +14,7 @@ const EndpointHeader: React.FC<EndpointHeaderProps> = ({
   sub,
 }) => (
   <div className="mb-12 text-center">
-    <div className="inline-flex items-center gap-2 font-mono text-xs sm:text-sm bg-raised border border-line rounded-full px-4 py-1.5 mb-4">
+    <div className="inline-flex items-center gap-2 font-cavolini text-sm sm:text-base font-semibold bg-raised border border-line rounded-full px-4 py-1.5 mb-4">
       <span className="text-green font-semibold">{method}</span>
       <span className="text-muted">{path}</span>
       <span className="text-muted">·</span>

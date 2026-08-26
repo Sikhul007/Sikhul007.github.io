@@ -153,7 +153,7 @@ const Navbar: React.FC = () => {
             <a
               href={resumePath}
               download
-              className="font-mono text-sm font-semibold px-4 py-2 rounded-md bg-purple text-main hover:bg-raised transition-colors shadow-lg"
+              className="font-mono text-sm font-semibold px-4 py-2 rounded-md bg-[#B2967D] text-main hover:bg-[#C4AE99] transition-colors shadow-lg"
             >
               resume.pdf ↓
             </a>
@@ -164,7 +164,7 @@ const Navbar: React.FC = () => {
             <a
               href={resumePath}
               download
-              className="font-mono text-xs font-semibold px-3 py-2 rounded-md bg-purple text-main"
+              className="font-mono text-xs font-semibold px-3 py-2 rounded-md bg-[#B2967D] text-main hover:bg-[#C4AE99] transition-colors"
             >
               resume ↓
             </a>

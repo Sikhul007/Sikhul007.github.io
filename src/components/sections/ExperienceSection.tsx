@@ -27,7 +27,7 @@ const experiences: ExperienceItem[] = [
     period: "May 2026 - Present",
     status: "CURRENT DEPLOYMENT",
     commitHash: "c8f12a9",
-    accent: "amber",
+    accent: "green",
     summary: "Building secure payment infrastructure and business-driven CMS systems.",
     techStack: ["ASP.NET Core", "Pathao Pay", "City Bank API", "PayWall", "SQL Server"],
     achievements: [
@@ -44,7 +44,7 @@ const experiences: ExperienceItem[] = [
     period: "Oct 2025 - Apr 2026",
     status: "PRODUCTION RELEASE",
     commitHash: "9a03b4e",
-    accent: "purple",
+    accent: "green",
     summary: "Strengthening authentication flows and improving application stability.",
     techStack: [".NET Core", "Cloudflare Turnstile", "JWT Auth", "ADO.NET", "C#"],
     achievements: [
@@ -119,7 +119,7 @@ const cardVariants = {
 };
 
 const ExperienceSection: React.FC = () => {
-  const [expandedId, setExpandedId] = useState<string | null>("exp-1");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
@@ -134,7 +134,7 @@ const ExperienceSection: React.FC = () => {
 
         <div className="max-w-7xl mx-auto relative">
           {/* Continuous Trunk Line connecting top-to-bottom across all dots */}
-          <div className="absolute left-4 top-0 bottom-0 z-0 w-[2px] bg-gradient-to-b from-amber via-purple to-green md:left-1/2 md:-translate-x-1/2" />
+          <div className="absolute left-4 top-0 bottom-0 z-0 w-[2px] bg-green md:left-1/2 md:-translate-x-1/2" />
 
           <motion.div
             variants={containerVariants}
@@ -168,8 +168,8 @@ const ExperienceSection: React.FC = () => {
                     aria-hidden="true"
                     className={`hidden md:block absolute top-[22px] z-20 text-sm font-bold leading-none ${
                       isEven
-                        ? "left-1/2 translate-x-1 text-amber"
-                        : "left-1/2 -translate-x-[calc(100%+4px)] text-purple"
+                        ? "left-1/2 translate-x-1 text-green"
+                        : "left-1/2 -translate-x-[calc(100%+4px)] text-green"
                     }`}
                   >
                     {isEven ? "›" : "‹"}
