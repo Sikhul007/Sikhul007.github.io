@@ -18,13 +18,13 @@ const Navbar: React.FC = () => {
     return (
       <>
         <span
-          className={`inline-block border-b pb-[1px] transition-all duration-200 ${
-            isActive ? "text-amber border-[#F5B759]" : "text-purple border-transparent"
+          className={`inline-block border-b-2 pb-[1px] transition-all duration-200 ${
+            isActive ? "text-amber border-amber" : "text-purple border-transparent"
           }`}
         >
           {prefix}
         </span>
-        <span className={isActive ? "text-main" : "text-muted"}>{suffix}</span>
+        <span className="text-main font-semibold">{suffix}</span>
       </>
     );
   };
@@ -120,7 +120,7 @@ const Navbar: React.FC = () => {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b border-line ${
-        isScrolled ? "py-2 backdrop-blur-md bg-[#070B14]/90 shadow-lg" : "py-4 bg-[#070B14]/70 backdrop-blur"
+        isScrolled ? "py-2 backdrop-blur-md bg-void/90 shadow-lg" : "py-4 bg-void/70 backdrop-blur"
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6">
@@ -143,8 +143,8 @@ const Navbar: React.FC = () => {
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleSmoothScroll(e, link.href)}
-                className={`font-mono text-sm transition-colors ${
-                  activeHref === link.href ? "text-main" : "text-muted hover:text-main"
+                className={`font-mono text-sm font-semibold transition-colors ${
+                  activeHref === link.href ? "text-main" : "text-main hover:text-amber"
                 }`}
               >
                 {renderNavLabel(link.name, activeHref === link.href)}
@@ -153,7 +153,7 @@ const Navbar: React.FC = () => {
             <a
               href={resumePath}
               download
-              className="font-mono text-sm font-semibold px-4 py-2 rounded-md bg-[#7C5CFF] text-white hover:bg-[#8f74ff] transition-colors shadow-[0_0_18px_rgba(124,92,255,.35)]"
+              className="font-mono text-sm font-semibold px-4 py-2 rounded-md bg-purple text-main hover:bg-raised transition-colors shadow-lg"
             >
               resume.pdf ↓
             </a>
@@ -164,13 +164,13 @@ const Navbar: React.FC = () => {
             <a
               href={resumePath}
               download
-              className="font-mono text-xs font-semibold px-3 py-2 rounded-md bg-[#7C5CFF] text-white"
+              className="font-mono text-xs font-semibold px-3 py-2 rounded-md bg-purple text-main"
             >
               resume ↓
             </a>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-main focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5CFF] rounded p-1"
+              className="text-main focus:outline-none focus-visible:ring-2 focus-visible:ring-purple rounded p-1"
               aria-label={isOpen ? "Close menu" : "Open menu"}
             >
               {isOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
@@ -187,8 +187,8 @@ const Navbar: React.FC = () => {
                   key={link.name}
                   href={link.href}
                   onClick={(e) => handleSmoothScroll(e, link.href)}
-                  className={`font-mono text-base transition-colors ${
-                    activeHref === link.href ? "text-main" : "text-muted hover:text-main"
+                  className={`font-mono text-base font-semibold transition-colors ${
+                    activeHref === link.href ? "text-main" : "text-main hover:text-amber"
                   }`}
                 >
                   {renderNavLabel(link.name, activeHref === link.href)}

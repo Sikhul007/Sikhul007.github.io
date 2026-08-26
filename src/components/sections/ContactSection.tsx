@@ -33,7 +33,7 @@ const ContactSection: React.FC = () => {
   };
 
   const inputClass =
-    "w-full bg-raised border border-line rounded-md px-4 py-2.5 text-main placeholder:text-[#4A5568] font-body text-sm focus:outline-none focus:border-[#7C5CFF] focus:ring-1 focus:ring-[#7C5CFF] transition-colors";
+    "w-full bg-raised border border-line rounded-md px-4 py-2.5 text-main placeholder:text-muted font-body text-sm focus:outline-none focus:border-purple focus:ring-1 focus:ring-purple transition-colors";
 
   return (
     <section id="contact" className="py-16 md:py-24 border-b border-line bg-void">
@@ -45,7 +45,7 @@ const ContactSection: React.FC = () => {
           sub="Have a project, a role, or just a question? Send a request — I respond fast."
         />
 
-        <div className="flex flex-col lg:flex-row gap-8 max-w-5xl mx-auto">
+        <div className="flex flex-col lg:flex-row gap-8 max-w-7xl mx-auto">
           {/* Form */}
           <div className="w-full lg:w-3/5">
             <div className="bg-panel border border-line rounded-xl p-6 sm:p-8 h-full">
@@ -105,14 +105,14 @@ const ContactSection: React.FC = () => {
                     />
                   </div>
                   {status === "error" && (
-                    <p className="font-mono text-xs text-[#FF5F57]">
+                    <p className="font-mono text-xs text-amber">
                       500 — something went wrong. Try again or email me directly.
                     </p>
                   )}
                   <button
                     type="submit"
                     disabled={status === "sending"}
-                    className="w-full font-mono text-sm font-semibold px-6 py-3 rounded-md bg-[#7C5CFF] text-white hover:bg-[#8f74ff] disabled:opacity-60 transition-colors shadow-[0_0_18px_rgba(124,92,255,.3)]"
+                    className="w-full font-mono text-sm font-semibold px-6 py-3 rounded-md bg-purple text-main hover:bg-raised disabled:opacity-60 transition-colors shadow-lg"
                   >
                     {status === "sending" ? "sending..." : "send_message()"}
                   </button>

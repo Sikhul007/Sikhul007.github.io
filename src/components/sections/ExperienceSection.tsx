@@ -77,21 +77,21 @@ const AccentStyles = {
     text: "text-amber",
     border: "border-amber/40",
     bg: "bg-amber/10",
-    glow: "shadow-[0_0_20px_rgba(245,183,89,0.35)]",
+    glow: "shadow-[0_0_20px_rgba(220,214,196,0.35)]",
     dot: "bg-amber",
   },
   purple: {
     text: "text-purple",
     border: "border-purple/40",
     bg: "bg-purple/10",
-    glow: "shadow-[0_0_20px_rgba(124,92,255,0.35)]",
+    glow: "shadow-[0_0_20px_rgba(174,192,172,0.35)]",
     dot: "bg-purple",
   },
   green: {
     text: "text-green",
     border: "border-green/40",
     bg: "bg-green/10",
-    glow: "shadow-[0_0_20px_rgba(61,220,151,0.35)]",
+    glow: "shadow-[0_0_20px_rgba(174,192,172,0.35)]",
     dot: "bg-green",
   },
 };
@@ -132,7 +132,7 @@ const ExperienceSection: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <EndpointHeader path="/api/experience" title="Career Log" />
 
-        <div className="max-w-5xl mx-auto relative">
+        <div className="max-w-7xl mx-auto relative">
           {/* Continuous Trunk Line connecting top-to-bottom across all dots */}
           <div className="absolute left-4 top-0 bottom-0 z-0 w-[2px] bg-gradient-to-b from-amber via-purple to-green md:left-1/2 md:-translate-x-1/2" />
 
@@ -221,8 +221,8 @@ const ExperienceCard: React.FC<{
 }> = ({ exp, theme, isExpanded, toggleExpand }) => {
   return (
     <div
-      className={`relative z-10 bg-panel border border-line rounded-2xl transition-all duration-300 hover:border-[#7C5CFF]/60 hover:shadow-2xl overflow-hidden ${
-        isExpanded ? "ring-1 ring-[#7C5CFF]/30" : ""
+      className={`relative z-10 bg-panel border border-line rounded-2xl transition-all duration-300 hover:border-purple/60 hover:shadow-2xl overflow-hidden ${
+        isExpanded ? "ring-1 ring-purple/30" : ""
       }`}
     >
       <div
@@ -243,7 +243,7 @@ const ExperienceCard: React.FC<{
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
-            <h3 className="font-display text-xl sm:text-2xl font-bold text-main">{exp.role}</h3>
+            <h3 className="font-cavolini text-xl sm:text-2xl font-bold text-main">{exp.role}</h3>
             <a
               href={exp.href}
               target="_blank"

@@ -57,7 +57,7 @@ const Hero: React.FC = () => {
       <div
         aria-hidden
         className="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[380px] rounded-full pointer-events-none"
-        style={{ background: "radial-gradient(closest-side, rgba(124,92,255,.16), transparent)" }}
+        style={{ background: "radial-gradient(closest-side, rgba(174,192,172,.16), transparent)" }}
       />
       <div className="container mx-auto px-4 sm:px-6 relative">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
@@ -67,11 +67,11 @@ const Hero: React.FC = () => {
               <span className="text-muted">$</span> whoami{" "}
               <span className="text-muted">— Assalamualaikum, hello!</span>
             </p>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-main leading-tight mb-5">
+            <h1 className="font-cavolini text-4xl sm:text-5xl lg:text-6xl text-main leading-tight mb-5">
               Md. Sikhul Islam{" "}
               <span className="text-purple">Shihab</span>
             </h1>
-            <p className="font-mono text-base sm:text-lg mb-8 min-h-[2rem]">
+            <p className="font-cavolini text-base sm:text-lg mb-8 min-h-[2rem]">
               <span className="text-purple">const</span>{" "}
               <span className="text-main">role</span>{" "}
               <span className="text-muted">=</span>{" "}
@@ -93,14 +93,14 @@ const Hero: React.FC = () => {
               <Link
                 href="https://github.com/Sikhul007?tab=repositories"
                 target="_blank"
-                className="inline-flex items-center gap-2 font-mono text-sm font-semibold px-6 py-3 rounded-md bg-[#7C5CFF] text-white hover:bg-[#8f74ff] transition-colors shadow-[0_0_24px_rgba(124,92,255,.35)]"
+                className="inline-flex items-center gap-2 font-mono text-sm font-semibold px-6 py-3 rounded-md bg-purple text-main hover:bg-raised transition-colors shadow-lg"
               >
                 <FaGithub /> view_work()
               </Link>
               <Link
                 href="https://www.linkedin.com/in/md-sikhul-islam-shihab/"
                 target="_blank"
-                className="inline-flex items-center gap-2 font-mono text-sm font-semibold px-6 py-3 rounded-md border border-line bg-panel text-main hover:border-[#7C5CFF] transition-colors"
+                className="inline-flex items-center gap-2 font-mono text-sm font-semibold px-6 py-3 rounded-md border border-line bg-panel text-main hover:border-purple transition-colors"
               >
                 <FaLinkedin /> connect()
               </Link>
@@ -112,9 +112,9 @@ const Hero: React.FC = () => {
             <div className="bg-panel border border-line rounded-xl overflow-hidden glow-purple max-w-lg mx-auto">
               {/* window chrome */}
               <div className="flex items-center gap-2 px-4 py-3 bg-raised border-b border-line">
-                <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-                <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-                <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+                <span className="w-3 h-3 rounded-full bg-amber" />
+                <span className="w-3 h-3 rounded-full bg-muted" />
+                <span className="w-3 h-3 rounded-full bg-green" />
                 <span className="font-mono text-xs text-muted ml-3">shihab@backend: ~</span>
               </div>
               <div className="p-5 sm:p-6">

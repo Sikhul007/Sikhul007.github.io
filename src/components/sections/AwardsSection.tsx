@@ -12,7 +12,7 @@ const AwardsSection: React.FC = () => {
           title="Awards & Certificates"
           sub="Five Dean's Awards across consecutive semesters — consistency, compiled."
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {awards.map((award, index) => (
             <div
               key={index}
@@ -28,7 +28,7 @@ const AwardsSection: React.FC = () => {
               </div>
               <div className="p-5 flex flex-col flex-1">
                 <div className="flex justify-between items-start gap-2 mb-2">
-                  <h3 className="font-display text-lg font-bold text-main">🏅 {award.title}</h3>
+                  <h3 className="font-cavolini text-lg font-bold text-main">🏅 {award.title}</h3>
                   <span className="font-mono text-[10px] bg-raised border border-line text-green px-2 py-1 rounded-full whitespace-nowrap">
                     {award.date}
                   </span>

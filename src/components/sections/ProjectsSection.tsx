@@ -12,14 +12,14 @@ const ProjectsSection: React.FC = () => {
           title="Projects"
           sub="Selected builds — from enterprise-style backends to full-stack products."
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {projects.map((project) => (
             <a
               key={project.title}
               href={project.projectUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-panel border border-line rounded-xl overflow-hidden card-hover flex flex-col focus-visible:ring-2 focus-visible:ring-[#7C5CFF] outline-none"
+              className="group bg-panel border border-line rounded-xl overflow-hidden card-hover flex flex-col focus-visible:ring-2 focus-visible:ring-purple outline-none"
             >
               <div className="relative w-full h-44 bg-raised border-b border-line overflow-hidden">
                 <Image
@@ -30,7 +30,7 @@ const ProjectsSection: React.FC = () => {
                 />
               </div>
               <div className="p-5 flex flex-col flex-1">
-                <h3 className="font-display text-lg font-bold text-main mb-2 group-hover:text-purple transition-colors">
+                <h3 className="font-cavolini text-lg font-bold text-main mb-2 group-hover:text-purple transition-colors">
                   {project.title}
                 </h3>
                 <div className="flex flex-wrap gap-1.5 mb-3">

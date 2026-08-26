@@ -20,7 +20,7 @@ const EndpointHeader: React.FC<EndpointHeaderProps> = ({
       <span className="text-muted">·</span>
       <span className="text-green">200 OK</span>
     </div>
-    <h2 className="font-display text-3xl sm:text-4xl font-bold text-main">{title}</h2>
+    <h2 className="font-cavolini text-3xl sm:text-4xl font-bold text-main">{title}</h2>
     {sub && <p className="text-muted mt-3 max-w-xl mx-auto text-sm sm:text-base">{sub}</p>}
   </div>
 );

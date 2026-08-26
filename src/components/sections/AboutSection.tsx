@@ -40,8 +40,8 @@ const AboutSection: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6">
         <EndpointHeader path="/api/about" title="About Me" />
 
-        <div className="flex flex-col md:flex-row items-center md:items-stretch gap-10 max-w-5xl mx-auto">
-          <div className="md:w-3/5 text-muted leading-relaxed space-y-4 text-base font-cavolini text-justify">
+        <div className="flex flex-col md:flex-row items-center md:items-stretch gap-10 max-w-7xl mx-auto">
+          <div className="md:w-3/5 text-muted leading-relaxed space-y-4 text-base text-justify">
             <p>
               I&apos;m a{" "}
               <a
@@ -122,7 +122,7 @@ const AboutSection: React.FC = () => {
         <div className="mt-16 max-w-3xl mx-auto">
           <div className="bg-panel border border-line rounded-xl p-6 sm:p-8 card-hover">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-2">
-              <h3 className="font-display text-xl font-bold text-main">
+              <h3 className="font-cavolini text-xl font-bold text-main">
                 BSc in Computer Science &amp; Engineering
               </h3>
               <span className="font-mono text-xs bg-raised border border-line text-green px-3 py-1 rounded-full w-fit">
@@ -147,7 +147,7 @@ const AboutSection: React.FC = () => {
             <span className="font-mono text-xs font-semibold tracking-widest text-amber uppercase bg-amber/10 border border-amber/20 px-3 py-1 rounded-full">
               // Capabilities
             </span>
-            <h3 className="font-display text-3xl sm:text-4xl font-bold text-main mt-3">
+            <h3 className="font-cavolini text-3xl sm:text-4xl font-bold text-main mt-3">
               Tech Stack &amp; Architecture
             </h3>
             <p className="text-muted text-sm mt-2 max-w-lg mx-auto">
@@ -156,11 +156,11 @@ const AboutSection: React.FC = () => {
           </div>
 
           <div className="bg-panel border border-line rounded-2xl overflow-hidden shadow-2xl relative">
-            <div className="bg-[#090E17] border-b border-line px-4 py-3 flex items-center justify-between select-none">
+            <div className="bg-void border-b border-line px-4 py-3 flex items-center justify-between select-none">
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-[#FF5F56]/80" />
-                <span className="w-3 h-3 rounded-full bg-[#FFBD2E]/80" />
-                <span className="w-3 h-3 rounded-full bg-[#27C93F]/80" />
+                <span className="w-3 h-3 rounded-full bg-amber/80" />
+                <span className="w-3 h-3 rounded-full bg-muted/80" />
+                <span className="w-3 h-3 rounded-full bg-green/80" />
                 <span className="font-mono text-xs text-muted/60 ml-2 hidden sm:inline-block">
                   ~/capabilities/runtime
                 </span>
@@ -186,7 +186,7 @@ const AboutSection: React.FC = () => {
                     onClick={() => setActiveTab(index)}
                     className={`flex items-center gap-2.5 px-5 py-3 font-mono text-xs transition-all border-r border-line shrink-0 cursor-pointer relative ${
                       isActive
-                        ? "bg-panel text-main font-medium border-t-2 border-t-[#7C5CFF]"
+                        ? "bg-panel text-main font-medium border-t-2 border-t-purple"
                         : "text-muted hover:text-main hover:bg-raised/40"
                     }`}
                   >
@@ -194,7 +194,7 @@ const AboutSection: React.FC = () => {
                       {ext}
                     </span>
                     <span>{filename}</span>
-                    {isActive && <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#7C5CFF]" />}
+                    {isActive && <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-purple" />}
                   </button>
                 );
               })}
@@ -217,7 +217,7 @@ const AboutSection: React.FC = () => {
                     key={skill.name}
                     type="button"
                     onClick={() => setSelectedSkill(skill)}
-                    className="group text-left bg-raised/80 hover:bg-raised border border-line hover:border-[#7C5CFF] rounded-xl p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-[#7C5CFF]/10 flex flex-col justify-between cursor-pointer relative overflow-hidden"
+                    className="group text-left bg-raised/80 hover:bg-raised border border-line hover:border-purple rounded-xl p-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple/10 flex flex-col justify-between cursor-pointer relative overflow-hidden"
                   >
                     <div className="flex items-center justify-between w-full mb-2">
                       <span className="font-mono text-[10px] text-muted/60 group-hover:text-purple transition-colors">
@@ -268,7 +268,7 @@ const AboutSection: React.FC = () => {
                   aria-modal="true"
                   aria-labelledby="skill-inspector-title"
                 >
-                  <div className="bg-[#090E17] border-b border-line px-5 py-3 flex items-center justify-between">
+                  <div className="bg-void border-b border-line px-5 py-3 flex items-center justify-between">
                     <span id="skill-inspector-title" className="text-purple font-mono text-xs font-semibold">
                       // Skill Inspector
                     </span>
